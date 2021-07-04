@@ -1,9 +1,10 @@
 package com.sad.yardmanagementsystem.service;
 
 
-import java.util.Arrays;
+import java.util.Arrays; 
 import java.util.Collection;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,11 +15,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.sad.yardmanagementsystem.model.Utente;
+import com.sad.yardmanagementsystem.repository.RepositoryDeposito;
 import com.sad.yardmanagementsystem.repository.RepositoryRuolo;
 import com.sad.yardmanagementsystem.repository.RepositoryUtente;
-
+import com.sad.yardmanagementsystem.model.Deposito;
+import com.sad.yardmanagementsystem.model.OrarioDisponibile;
 import com.sad.yardmanagementsystem.model.Ruolo;
-
+import com.sad.yardmanagementsystem.controller.dto.DepositoInfoDto;
 import com.sad.yardmanagementsystem.controller.dto.UtenteRegistrationDto;
 
 
@@ -26,6 +29,9 @@ import com.sad.yardmanagementsystem.controller.dto.UtenteRegistrationDto;
 public class UtenteServiceImpl implements UtenteService{
 
 	private RepositoryUtente userRepository;
+	
+	@Autowired
+	private RepositoryDeposito depositoRepository;
 	
 	@Autowired
 	private RepositoryRuolo ruoloRepository;
@@ -42,6 +48,38 @@ public class UtenteServiceImpl implements UtenteService{
 	public Utente save(UtenteRegistrationDto registrationDto) {
 		Utente user = new Utente(registrationDto.getRagioneSociale(),registrationDto.getPartitaIVA(),registrationDto.getMail(),passwordEncoder.encode(registrationDto.getPassword()),registrationDto.getTelefono(),registrationDto.getTipologia(),registrationDto.getReferente(),Arrays.asList(ruoloRepository.findByNome(registrationDto.getTipologia())));
 		return userRepository.save(user);
+	}
+	
+	public void add_orario_disp(DepositoInfoDto depositoDto) {
+		
+		Optional<Deposito> dep = depositoRepository.findById(depositoDto.getId());
+		
+		Deposito deposito = dep.get();
+		
+		Collection<OrarioDisponibile> orari = deposito.getorariDisponibili();
+		
+		orari.add(depositoDto.getorario());
+		
+		deposito.setorariDisponibili(orari);
+		
+		depositoRepository.save(deposito);
+		
+	}
+	
+	public void delete_orario_disp(DepositoInfoDto depositoDto) {
+		
+		Optional<Deposito> dep = depositoRepository.findById(depositoDto.getId());
+		
+		Deposito deposito = dep.get();
+		
+		Collection<OrarioDisponibile> orari = deposito.getorariDisponibili();
+		
+		orari.remove(depositoDto.getorario());
+		
+		deposito.setorariDisponibili(orari);
+		
+		depositoRepository.save(deposito);
+		
 	}
 
 	@Override
@@ -65,6 +103,6 @@ public class UtenteServiceImpl implements UtenteService{
 		return true;
 		}
 		return false;
-		}
+	}
 	
 }
