@@ -1,18 +1,17 @@
 package com.sad.yardmanagementsystem.controller.dto;
- 
-import java.util.List; 
+   
 import com.sad.yardmanagementsystem.model.OrarioDisponibile;
 
 public class DepositoInfoDto {
 	
 	private Long id;
-	private OrarioDisponibile orario;
+	private String orario;
 	
 	public DepositoInfoDto() {
 		super();
 	}
 	
-	public DepositoInfoDto(Long id, OrarioDisponibile orario) {
+	public DepositoInfoDto(Long id, String orario) {
 		super();
 		this.id = id;
 		this.orario = orario;
@@ -24,10 +23,10 @@ public class DepositoInfoDto {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public OrarioDisponibile getorario() {
+	public String getorario() {
 		return orario;
 	}
-	public void setorario(OrarioDisponibile orario) {
+	public void setorario(String orario) {
 		this.orario = orario;
 	}
 

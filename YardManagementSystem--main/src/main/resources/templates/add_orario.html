@@ -21,7 +21,7 @@
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#" th:href="@{/}">Inserimento di un nuovo orario disponibile</a>
+				<a class="navbar-brand" href="http://localhost:8080/home_gestore" th:href="@{/home_gestore}">Home</a>
 			</div>
 		</div>
 	</nav>
@@ -40,9 +40,25 @@
 				
 				
 				<!-- error message -->
-				<div th:if="${param.error}">
-					<div class="alert alert-danger">L'email inserita è già in uso.</div>
+				<div th:if="${param.error0}">
+					<div class="alert alert-danger">L'id inserito non appartiene ad alcun deposito.</div>
 				</div>
+				
+				<!-- error message -->
+				<div th:if="${param.error1}">
+					<div class="alert alert-danger">L'orario inserito è gia stato inserito.</div>
+				</div>
+				
+				<!-- error message -->
+				<div th:if="${param.error2}">
+					<div class="alert alert-danger">Fascia oraria non disponibile.</div>
+				</div>
+				
+				<!-- error message -->
+				<div th:if="${param.error3}">
+					<div class="alert alert-danger"> Non hai i permessi di accesso al magazzino.</div>
+				</div>
+				
 
 				<h1>Inserisci i dati</h1>
 
@@ -54,7 +70,7 @@
 					</div>
 
 					<div class="form-group">
-						<label class="control-label" for="orario"> Nuovo orario disponibile </label> <input
+						<label class="control-label" for="orario"> Nuovo orario disponibile (fasce orarie da 1 ora, es: 00-01, 01-02 ecc..) </label> <input
 							id="orario" class="form-control" type="text" th:field="*{orario}"
 							required autofocus="autofocus" />
 					</div>

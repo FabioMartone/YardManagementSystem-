@@ -13,4 +13,8 @@ public interface UtenteService extends UserDetailsService{
 	boolean email_exists(UtenteRegistrationDto registrationDto);
 	void add_orario_disp(DepositoInfoDto depositoDto);
 	void delete_orario_disp(DepositoInfoDto depositoDto);
+	boolean deposito_exists(DepositoInfoDto depositoDto);
+	boolean orario_deposito_exists(DepositoInfoDto depositoDto);
+	boolean fascia_oraria_exists(DepositoInfoDto depositoDto);
+	boolean is_associated(String email, DepositoInfoDto depositoDto);
 }

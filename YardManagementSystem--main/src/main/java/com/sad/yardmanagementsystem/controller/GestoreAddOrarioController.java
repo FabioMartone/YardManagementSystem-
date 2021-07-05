@@ -1,6 +1,8 @@
 package com.sad.yardmanagementsystem.controller;
 
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +38,23 @@ public class GestoreAddOrarioController {
 	
 	@PostMapping
 	public String add_orario_gestore(@ModelAttribute("Deposito") DepositoInfoDto depositoDto) {
+		
+		if(!utenteService.deposito_exists(depositoDto)) {
+			return "redirect:/add_orario?error0";
+		}
+		
+		if(utenteService.orario_deposito_exists(depositoDto)) {
+			return "redirect:/add_orario?error1";
+		}
+		
+		if(!utenteService.fascia_oraria_exists(depositoDto)) {
+			return "redirect:/add_orario?error2";
+		}
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if(!utenteService.is_associated(auth.getName(), depositoDto)) {
+			return "redirect:/add_orario?error3";
+		}
 		
 		utenteService.add_orario_disp(depositoDto);
 		return "redirect:/add_orario?success";

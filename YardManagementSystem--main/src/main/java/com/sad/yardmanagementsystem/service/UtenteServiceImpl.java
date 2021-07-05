@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.sad.yardmanagementsystem.model.Utente;
 import com.sad.yardmanagementsystem.repository.RepositoryDeposito;
+import com.sad.yardmanagementsystem.repository.RepositoryOrarioDisponibile;
 import com.sad.yardmanagementsystem.repository.RepositoryRuolo;
 import com.sad.yardmanagementsystem.repository.RepositoryUtente;
 import com.sad.yardmanagementsystem.model.Deposito;
@@ -32,6 +33,9 @@ public class UtenteServiceImpl implements UtenteService{
 	
 	@Autowired
 	private RepositoryDeposito depositoRepository;
+	
+	@Autowired
+	private RepositoryOrarioDisponibile orarioRepository;
 	
 	@Autowired
 	private RepositoryRuolo ruoloRepository;
@@ -58,7 +62,7 @@ public class UtenteServiceImpl implements UtenteService{
 		
 		Collection<OrarioDisponibile> orari = deposito.getorariDisponibili();
 		
-		orari.add(depositoDto.getorario());
+		orari.add(new OrarioDisponibile(depositoDto.getorario()));
 		
 		deposito.setorariDisponibili(orari);
 		
@@ -74,7 +78,7 @@ public class UtenteServiceImpl implements UtenteService{
 		
 		Collection<OrarioDisponibile> orari = deposito.getorariDisponibili();
 		
-		orari.remove(depositoDto.getorario());
+		orari.remove(new OrarioDisponibile(depositoDto.getorario()));
 		
 		deposito.setorariDisponibili(orari);
 		
@@ -100,9 +104,58 @@ public class UtenteServiceImpl implements UtenteService{
 	
 	public boolean email_exists(UtenteRegistrationDto registrationDto) {
 		if (userRepository.findByEmail(registrationDto.getMail()) != null) {
-		return true;
+			return true;
 		}
 		return false;
 	}
 	
+	public boolean deposito_exists(DepositoInfoDto depositoDto) {
+		
+		Optional<Deposito> dep = depositoRepository.findById(depositoDto.getId());
+		
+		if (dep.isPresent()) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean orario_deposito_exists(DepositoInfoDto depositoDto) {
+		
+		Optional<Deposito> dep = depositoRepository.findById(depositoDto.getId());
+
+		Deposito deposito = dep.get();
+		
+		for(OrarioDisponibile orario : deposito.getorariDisponibili()) {
+			if(orario.getFasciaOraria().equals(depositoDto.getorario())) {
+				return true;
+			}
+		}
+		return false;
+		
+	}
+	
+	public boolean fascia_oraria_exists(DepositoInfoDto depositoDto) {
+		
+		Optional<OrarioDisponibile> ora = orarioRepository.findByFasciaOraria(depositoDto.getorario());
+		
+		if (ora.isPresent()) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean is_associated(String email, DepositoInfoDto depositoDto) {
+		
+		Utente u = userRepository.findByEmail(email);
+		
+		Optional<Deposito> dep = depositoRepository.findById(depositoDto.getId());
+		
+		Deposito deposito = dep.get();
+		
+		if (u.getId().equals(deposito.getGestore().getId())) {
+			return true;
+		}
+		return false;
+		
+	}
 }
