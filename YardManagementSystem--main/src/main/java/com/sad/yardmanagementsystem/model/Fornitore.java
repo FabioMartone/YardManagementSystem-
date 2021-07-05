@@ -26,6 +26,9 @@ public class Fornitore {
 
 	@Id
 	@GeneratedValue(strategy =  GenerationType.IDENTITY)
+	private Long id;
+	
+	@Column(name = "mail")
 	private String mail;
 	
 	@Column(name = "ragione_sociale")
@@ -41,12 +44,21 @@ public class Fornitore {
 		super();
 	}
 	
-	public Fornitore(String mail, String ragioneSociale, String indirizzo, String telefono) {
+	public Fornitore(Long id, String mail, String ragioneSociale, String indirizzo, String telefono) {
 		super();
+		this.id = id;
 		this.mail = mail;
 		this.ragioneSociale = ragioneSociale;
 		this.indirizzo = indirizzo;
 		this.telefono = telefono;
+	}
+	
+	public Long getId() {
+		return id;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 	public String getMail() {
