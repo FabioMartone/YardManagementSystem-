@@ -21,7 +21,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 
 @Entity
-@Table(name =  "Fornitore")
+@Table(name =  "Fornitore",uniqueConstraints = @UniqueConstraint(columnNames = "mail"))
 public class Fornitore {
 
 	@Id

@@ -43,18 +43,39 @@ public class Deposito {
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private List<Ordine> ordini;
 	
+	@OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "id")
+	@JoinColumn(name = "codice_deposito", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private List<Area> aree;
+	
+	@OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "id")
 	private List<DepositiCorrieri> corrieri;
 	
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(
+			name = "orari_deposito",
+			joinColumns = @JoinColumn(
+		            name = "id_deposito", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(
+				            name = "orario_disponibile", referencedColumnName = "fascia_oraria"))
+	private Collection<OrarioDisponibile> orariDisponibili;
 	
 	public Deposito() {
 		super();
 	}
 
-	public Deposito(Long id, String indirizzo, Gestore gestore) {
+	public Deposito(Long id, String indirizzo, Gestore gestore, Collection<OrarioDisponibile> orariDisponibili, List<DepositiCorrieri> corrieri, List<Area> Aree) {
 		super();
 		this.id = id;
 		this.indirizzo = indirizzo;
 		this.gestore = gestore;
+		this.orariDisponibili = orariDisponibili;
+		this.corrieri = corrieri;
+		this.aree = aree;
 	}
 
 	public Long getId() {
@@ -84,6 +105,31 @@ public class Deposito {
 	public void setGestore(Utente gestore) {
 		this.gestore = gestore;
 	}
+	
+	public Collection<OrarioDisponibile> getOrariDisponibili() {
+		return orariDisponibili;
+	}
+
+	public void setOrariDisponibili(Collection<OrarioDisponibile> orari) {
+		this.orariDisponibili = orari;
+	}
+	
+	public List<DepositiCorrieri> getCorrieri(){
+		return corrieri;
+	}
+	
+	public void setCorrieri(List<DepositiCorrieri> corrieri) {
+		this.corrieri = corrieri;
+	}
+	
+	public List<Area> getAree(){
+		return aree;
+	}
+	
+	public void setAree(List<Area> aree) {
+		this.aree = aree;
+	}
+	
 	
 	
 	

@@ -24,8 +24,8 @@ public class OrdineScarico extends Ordine {
 	}
 
 	public OrdineScarico(Long numero, String chiave, String dataPrevista, int numeroColli, int numeroColonne,
-			int numeroPedane, int pesoTotale,Long codiceDeposito, Fornitore fornitore) {
-		super(numero, chiave, dataPrevista, numeroColli, numeroColonne, numeroPedane, pesoTotale,codiceDeposito);
+			int numeroPedane, int pesoTotale,Long codiceDeposito, Prenotazione prenotazione, Fornitore fornitore) {
+		super(numero, chiave, dataPrevista, numeroColli, numeroColonne, numeroPedane, pesoTotale,codiceDeposito, prenotazione);
 		// TODO Auto-generated constructor stub
 		this.fornitore = fornitore;
 	}

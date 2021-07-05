@@ -1,6 +1,7 @@
 package com.sad.yardmanagementsystem.model;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -21,7 +24,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 
 @Entity
-@Table(name =  "Ordine")
+@Table(name =  "Ordine",uniqueConstraints = @UniqueConstraint(columnNames = "numero"))
 public class Ordine {
 	
 	@Id
@@ -51,12 +54,16 @@ public class Ordine {
     @OnDelete(action = OnDeleteAction.CASCADE)
 	private Long codiceDeposito;
 	
+	@OneToOne(cascade = CascadeType.ALL)
+	    @JoinColumn(name = "prenotazione_ordine", referencedColumnName = "codice")
+	    private Prenotazione prenotazione;
+	
 	public Ordine() {
 		// TODO Auto-generated constructor stub
 		super();
 	}
 
-	public Ordine(Long numero, String chiave, String dataPrevista, int numeroColli, int numeroColonne, int numeroPedane, int pesoTotale, Long codiceDeposito) {
+	public Ordine(Long numero, String chiave, String dataPrevista, int numeroColli, int numeroColonne, int numeroPedane, int pesoTotale, Long codiceDeposito, Prenotazione prenotazione) {
 			super();
 			this.numero = numero;
 			this.chiave = chiave;
@@ -65,6 +72,7 @@ public class Ordine {
 			this.numeroColonne = numeroColonne;
 			this.numeroPedane = numeroPedane;
 			this.codiceDeposito = codiceDeposito;
+			this.prenotazione = prenotazione;
 	}
 
 	public Long getNumero() {
@@ -121,6 +129,14 @@ public class Ordine {
 	
 	public void setCodiceDeposito(Long codiceDeposito) {
 		this.codiceDeposito = codiceDeposito;
+	}
+	
+	public Prenotazione getPrenotazione() {
+		return prenotazione;
+	}
+	
+	public void setPrenotazione(Prenotazione prenotazione) {
+		this.prenotazione = prenotazione;
 	}
 	
 }

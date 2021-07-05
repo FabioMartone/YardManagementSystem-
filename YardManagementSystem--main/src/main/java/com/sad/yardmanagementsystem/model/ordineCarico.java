@@ -31,8 +31,8 @@ public class ordineCarico extends Ordine {
 	}
 
 	public ordineCarico(Long numero, String chiave, String dataPrevista, int numeroColli, int numeroColonne,
-			int numeroPedane, int pesoTotale, Long codiceDeposito, String dataMercePronta, String clienteDestinatario, String indirizzoDestinatario) {
-		super(numero, chiave, dataPrevista, numeroColli, numeroColonne, numeroPedane, pesoTotale, codiceDeposito);
+			int numeroPedane, int pesoTotale, Long codiceDeposito, Prenotazione prenotazione, String dataMercePronta, String clienteDestinatario, String indirizzoDestinatario) {
+		super(numero, chiave, dataPrevista, numeroColli, numeroColonne, numeroPedane, pesoTotale, codiceDeposito, prenotazione);
 		// TODO Auto-generated constructor stub
 		this.dataMercePronta = dataMercePronta;
 		this.clienteDestinatario = clienteDestinatario;
