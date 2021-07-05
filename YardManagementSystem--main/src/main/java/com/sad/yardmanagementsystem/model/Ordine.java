@@ -3,6 +3,8 @@ package com.sad.yardmanagementsystem.model;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -140,5 +142,3 @@ public class Ordine {
 	}
 	
 }
-
-

@@ -3,16 +3,53 @@ package com.sad.yardmanagementsystem.model;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Entity
 @Table(name =  "OrdineCarico")
+@AttributeOverrides({
+    @AttributeOverride(name="numero",
+                       column=@Column(name="numero")),
+    @AttributeOverride(name="chiave",
+                       column=@Column(name="chiave")),
+    @AttributeOverride(name="dataPrevista",
+    			column=@Column(name="data_prevista")),
+    @AttributeOverride(name="numeroColli",
+				column=@Column(name="numero_colli")),
+    @AttributeOverride(name="numeroColonne",
+				column=@Column(name="numero_colonne")),
+    @AttributeOverride(name="numeropPedane",
+				column=@Column(name="numero_pedane")),
+    @AttributeOverride(name="pesoTotale",
+    			column=@Column(name="peso_totale")),
+
+})
 public class ordineCarico extends Ordine {
+	
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "codice_deposito", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+	private Long codiceDeposito;
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	    @JoinColumn(name = "prenotazione_ordine", referencedColumnName = "codice")
+	    private Prenotazione prenotazione;
 
 	@Column(name = "data_merce_pronta")
 	private String dataMercePronta;
