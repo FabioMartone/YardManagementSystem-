@@ -24,57 +24,36 @@ import javax.persistence.UniqueConstraint;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-
-@Entity
-@Table(name =  "Ordine",uniqueConstraints = @UniqueConstraint(columnNames = "numero"))
 public class Ordine {
 	
-	@Id
-	@GeneratedValue(strategy =  GenerationType.IDENTITY)
 	private Long numero;
 	
-	@Column(name = "chiave")
-	private String chiave;
-	
-	@Column(name = "data_prevista")
 	private String dataPrevista;
 	
-	@Column(name = "numero_colli")
 	private int numeroColli;
 	
-	@Column(name = "numero_colonne")
 	private int numeroColonne;
 	
-	@Column(name = "numero_pedane")
 	private int numeroPedane;
 
-	@Column(name = "peso_totale")
 	private int pesoTotale;
-	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "codice_deposito", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+
 	private Long codiceDeposito;
-	
-	@OneToOne(cascade = CascadeType.ALL)
-	    @JoinColumn(name = "prenotazione_ordine", referencedColumnName = "codice")
-	    private Prenotazione prenotazione;
-	
+		
 	public Ordine() {
 		// TODO Auto-generated constructor stub
 		super();
 	}
 
-	public Ordine(Long numero, String chiave, String dataPrevista, int numeroColli, int numeroColonne, int numeroPedane, int pesoTotale, Long codiceDeposito, Prenotazione prenotazione) {
+	public Ordine(Long numero, String dataPrevista, int numeroColli, int numeroColonne, int numeroPedane, int pesoTotale, Long codiceDeposito) {
 			super();
 			this.numero = numero;
-			this.chiave = chiave;
 			this.dataPrevista = dataPrevista;
 			this.numeroColli = numeroColli;
 			this.numeroColonne = numeroColonne;
 			this.numeroPedane = numeroPedane;
 			this.codiceDeposito = codiceDeposito;
-			this.prenotazione = prenotazione;
+			
 	}
 
 	public Long getNumero() {
@@ -85,13 +64,6 @@ public class Ordine {
 		this.numero = numero;
 	}
 	
-	public String getChiave() {
-		return chiave;
-	}
-	
-	public void setChiave(String chiave) {
-		this.chiave = chiave;
-	}
 	
 	public String getDataPrevista() {
 		return dataPrevista;
@@ -133,12 +105,5 @@ public class Ordine {
 		this.codiceDeposito = codiceDeposito;
 	}
 	
-	public Prenotazione getPrenotazione() {
-		return prenotazione;
-	}
-	
-	public void setPrenotazione(Prenotazione prenotazione) {
-		this.prenotazione = prenotazione;
-	}
-	
+
 }

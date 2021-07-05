@@ -35,7 +35,7 @@ public class Area {
 	@Column(name = "tipo_area")
 	private TipoArea tipo;
 	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(fetch = FetchType.LAZY, optional = false,targetEntity = Deposito.class)
     @JoinColumn(name = "codice_deposito", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
 	private Long codiceDeposito;
@@ -45,12 +45,13 @@ public class Area {
 		super();
 	}
 	
-	public Area(Long codice, String descrizione, int flag, TipoArea tipo) {
+	public Area(Long codice, String descrizione, int flag, TipoArea tipo, Long codiceDeposito) {
 		super();
 		this.codice = codice;
 		this.descrizione = descrizione;
 		this.flag = flag;
 		this.tipo = tipo;
+		this.codiceDeposito = codiceDeposito;
 	}
 
 	public Long getCodice() {
@@ -84,4 +85,13 @@ public class Area {
 	public void setTipo(TipoArea tipo) {
 		this.tipo = tipo;
 	}
+	
+	public Long getCodiceDeposito() {
+		return codiceDeposito;
+	}
+	
+	public void setCodiceDeposito(Long codiceDeposito) {
+		this.codiceDeposito = codiceDeposito;
+	}
+	
 }

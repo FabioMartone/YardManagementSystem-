@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -27,6 +28,7 @@ import org.hibernate.annotations.OnDeleteAction;
 public class Prenotazione {
 
 	@Id
+	@Column(name = "codice")
 	@GeneratedValue(strategy =  GenerationType.IDENTITY)
 	private Long codice;
 	
@@ -45,8 +47,15 @@ public class Prenotazione {
 				            name = "id_movimento", referencedColumnName = "id"))
 	private List<Movimento> movimenti;
 	
-	@OneToOne(mappedBy = "Prenotazioni")
-    private Ordine ordine;
+	@OneToOne
+	@MapsId
+	@JoinColumn(name = "codice")
+    private ordineCarico OrdineCarico;
+	
+	@OneToOne
+	@MapsId
+	@JoinColumn(name = "codice")
+    private OrdineScarico ordineScarico;
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "numero_deposito_corriere", nullable = false)
@@ -58,13 +67,14 @@ public class Prenotazione {
 		super();
 	}
 	
-	public Prenotazione(Long codice, String data, String fasciaOraria, List<Movimento> movimenti, Ordine ordine, DepositiCorrieri depositiCorrieri) {
+	public Prenotazione(Long codice, String data, String fasciaOraria, List<Movimento> movimenti, ordineCarico OrdineCarico,OrdineScarico ordineScarico, DepositiCorrieri depositiCorrieri) {
 		super();
 		this.codice = codice;
 		this.data = data;
 		this.fasciaOraria = fasciaOraria;
 		this.movimenti = movimenti;
-		this.ordine = ordine;
+		this.OrdineCarico = OrdineCarico;
+		this.ordineScarico = ordineScarico;
 		this.depositiCorrieri = depositiCorrieri;
 	}
 	
@@ -100,12 +110,20 @@ public class Prenotazione {
 		this.movimenti = movimenti;
 	}
 	
-	public Ordine getOrdine() {
-		return ordine;
+	public Ordine getOrdineCarico() {
+		return OrdineCarico;
 	}
 	
-	public void setOrdine(Ordine ordine) {
-		this.ordine = ordine;
+	public void setOrdineCarico(ordineCarico OrdineCarico) {
+		this.OrdineCarico = OrdineCarico;
+	}
+
+	public Ordine getOrdineScarico() {
+		return ordineScarico;
+	}
+	
+	public void setOrdineScarico(OrdineScarico ordineScarico) {
+		this.ordineScarico = ordineScarico;
 	}
 	
 	public DepositiCorrieri getDepositiCorrieri() {

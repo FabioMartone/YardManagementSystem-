@@ -38,16 +38,17 @@ public class Deposito {
 	
 	@OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
-            mappedBy = "id")
-	@JoinColumn(name = "codice_deposito", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	private List<Ordine> ordini;
+            mappedBy = "deposito")
+	private List<OrdineScarico> ordiniScarico;
 	
 	@OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
-            mappedBy = "id")
-	@JoinColumn(name = "codice_deposito", nullable = false)
-	@OnDelete(action = OnDeleteAction.CASCADE)
+            mappedBy = "deposito")
+	private List<ordineCarico> OrdiniCarico;
+	
+	@OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "codice")
 	private List<Area> aree;
 	
 	@OneToMany(cascade = CascadeType.ALL,

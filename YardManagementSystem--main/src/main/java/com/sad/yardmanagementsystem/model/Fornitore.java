@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -40,17 +42,23 @@ public class Fornitore {
 	@Column(name = "telefono")
 	private String telefono;
 	
+	@OneToOne
+	@MapsId
+	@JoinColumn(name = "id")
+	private OrdineScarico ordineScarico;
+	
 	public Fornitore(){
 		super();
 	}
 	
-	public Fornitore(Long id, String mail, String ragioneSociale, String indirizzo, String telefono) {
+	public Fornitore(Long id, String mail, String ragioneSociale, String indirizzo, String telefono, OrdineScarico ordineScarico) {
 		super();
 		this.id = id;
 		this.mail = mail;
 		this.ragioneSociale = ragioneSociale;
 		this.indirizzo = indirizzo;
 		this.telefono = telefono;
+		this.ordineScarico = ordineScarico;
 	}
 	
 	public Long getId() {
@@ -91,6 +99,14 @@ public class Fornitore {
 	
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
+	}
+	
+	public OrdineScarico getOrdineScarico() {
+		return ordineScarico;
+	}
+	
+	public void setOrdineScarico(OrdineScarico ordineScarico) {
+		this.ordineScarico = ordineScarico;
 	}
 	
 }

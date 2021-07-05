@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.AttributeOverrides;
@@ -23,37 +24,25 @@ import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name =  "OrdineScarico")
-@AttributeOverrides({
-    @AttributeOverride(name="numero",
-                       column=@Column(name="numero")),
-    @AttributeOverride(name="chiave",
-                       column=@Column(name="chiave")),
-    @AttributeOverride(name="dataPrevista",
-    			column=@Column(name="data_prevista")),
-    @AttributeOverride(name="numeroColli",
-				column=@Column(name="numero_colli")),
-    @AttributeOverride(name="numeroColonne",
-				column=@Column(name="numero_colonne")),
-    @AttributeOverride(name="numeropPedane",
-				column=@Column(name="numero_pedane")),
-    @AttributeOverride(name="pesoTotale",
-    			column=@Column(name="peso_totale")),
 
-})
 public class OrdineScarico extends Ordine {
 	
-		
+	@Id
+	@GeneratedValue(strategy =  GenerationType.IDENTITY)
+	private Long chiave;
+	
+	@OneToOne(mappedBy = "ordineScarico",cascade = CascadeType.ALL)
+	@PrimaryKeyJoinColumn
+	private Fornitore fornitore;
+	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "codice_deposito", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-	private Long codiceDeposito;
+	private Deposito deposito;
 	
-	@OneToOne(cascade = CascadeType.ALL)
-	    @JoinColumn(name = "prenotazione_ordine", referencedColumnName = "codice")
-	    private Prenotazione prenotazione;
-
-	@Column(name = "fornitore")
-	private Fornitore fornitore;
+	@OneToOne(mappedBy = "ordineScarico",cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private Prenotazione prenotazione;
 	
 	public OrdineScarico() {
 		// TODO Auto-generated constructor stub
@@ -61,11 +50,20 @@ public class OrdineScarico extends Ordine {
 		fornitore = new Fornitore();
 	}
 
-	public OrdineScarico(Long numero, String chiave, String dataPrevista, int numeroColli, int numeroColonne,
-			int numeroPedane, int pesoTotale,Long codiceDeposito, Prenotazione prenotazione, Fornitore fornitore) {
-		super(numero, chiave, dataPrevista, numeroColli, numeroColonne, numeroPedane, pesoTotale,codiceDeposito, prenotazione);
+	public OrdineScarico(Long numero, Long chiave, String dataPrevista, int numeroColli, int numeroColonne,
+			int numeroPedane, int pesoTotale,Long codiceDeposito, Fornitore fornitore) {
+		super(numero, dataPrevista, numeroColli, numeroColonne, numeroPedane, pesoTotale,codiceDeposito);
 		// TODO Auto-generated constructor stub
 		this.fornitore = fornitore;
+		this.chiave = chiave;
+	}
+	
+	public Long getChiave() {
+		return chiave;
+	}
+	
+	public void setChiave(Long chiave) {
+		this.chiave = chiave;
 	}
 	
 	public Fornitore getFornitore() {
