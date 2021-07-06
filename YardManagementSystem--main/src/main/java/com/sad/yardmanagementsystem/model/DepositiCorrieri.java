@@ -9,12 +9,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-@Entity
-@Table(name = "depositi_corrieri")
+@Entity(name = "depositi_corrieri")
+@Table(uniqueConstraints=
+@UniqueConstraint(columnNames={"id_corriere", "id_deposito"}),name = "depositi_corrieri")
 public class DepositiCorrieri {
 	
 	
@@ -36,9 +38,16 @@ public class DepositiCorrieri {
 	private String stato;
 	
 	
-	
 	public DepositiCorrieri() {
 		super();
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public DepositiCorrieri(Utente corriere, Deposito deposito, String stato) {

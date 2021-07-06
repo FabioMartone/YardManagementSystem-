@@ -10,4 +10,5 @@ import com.sad.yardmanagementsystem.model.Deposito;
 @Repository
 public interface RepositoryDeposito extends JpaRepository<Deposito, Long>{
 	Optional<Deposito> findById(Long id);
+	Deposito findByIndirizzo(String indirizzo);
 }

@@ -21,7 +21,8 @@
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="http://localhost:8080/home_gestore" th:href="@{/home_gestore}">Home</a>
+				<sec:authorize="isAuthenticated()"><a class="navbar-brand" th:href="@{/home_gestore}">Home</a>
+				<sec:authorize="isAuthenticated()"><a class="navbar-brand" th:href="@{/logout}">Logout</a>
 			</div>
 		</div>
 	</nav>
@@ -46,7 +47,7 @@
 				
 				<!-- error message -->
 				<div th:if="${param.error1}">
-					<div class="alert alert-danger">L'orario inserito Ã¨ gia stato inserito.</div>
+					<div class="alert alert-danger">L'orario inserito è gia stato inserito.</div>
 				</div>
 				
 				<!-- error message -->
@@ -62,7 +63,7 @@
 
 				<h1>Inserisci i dati</h1>
 
-				<form th:action="@{/add_orario}" method="post" th:object="${Deposito}">
+				<form th:action="@{/home_gestore/add_orario}" method="post" th:object="${DepositoOrario}">
 					<div class="form-group">
 						<label class="control-label" for="id"> ID Deposito </label>
 						<input id="id" class="form-control" type="text" th:field="*{id}"

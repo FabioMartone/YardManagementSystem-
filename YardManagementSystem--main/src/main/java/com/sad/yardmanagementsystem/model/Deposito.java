@@ -1,13 +1,12 @@
 package com.sad.yardmanagementsystem.model;
 
-import java.util.Collection; 
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,7 +22,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
-@Table(name =  "Deposito")
+@Table(name =  "Deposito", uniqueConstraints = @UniqueConstraint(columnNames = "indirizzo"))
 public class Deposito {
 	
 	@Id
@@ -40,10 +39,30 @@ public class Deposito {
 	
 	@OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
+            mappedBy = "deposito")
+	private List<OrdineScarico> ordiniScarico;
+	
+	@OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "deposito")
+	private List<ordineCarico> OrdiniCarico;
+	
+	@OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
+	@JoinTable(
+			name = "aree_deposito",
+			joinColumns = @JoinColumn(
+		            name = "id_deposito", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(
+				            name = "codice_area", referencedColumnName = "codice"))
+	private List<Area> aree;
+	
+	@OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
             mappedBy = "id")
 	private List<DepositiCorrieri> corrieri;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinTable(
 			name = "orari_deposito",
 			joinColumns = @JoinColumn(
@@ -52,17 +71,15 @@ public class Deposito {
 				            name = "orario_disponibile", referencedColumnName = "fascia_oraria"))
 	private Collection<OrarioDisponibile> orariDisponibili;
 	
-	
 	public Deposito() {
 		super();
 	}
 
-	public Deposito(Long id, String indirizzo, Utente gestore, Collection<OrarioDisponibile> orariDisp) {
+	public Deposito(String indirizzo, Utente gestore, List<Area> aree) {
 		super();
-		this.id = id;
 		this.indirizzo = indirizzo;
 		this.gestore = gestore;
-		this.orariDisponibili = orariDisp;
+		this.aree = aree;
 	}
 
 	public Long getId() {
@@ -85,15 +102,49 @@ public class Deposito {
 		return gestore;
 	}
 
-	public void setGestore(Gestore gestore) {
+	public void setGestore(Utente gestore) {
 		this.gestore = gestore;
 	}
-	
-	public Collection<OrarioDisponibile> getorariDisponibili() {
+
+	public List<OrdineScarico> getOrdiniScarico() {
+		return ordiniScarico;
+	}
+
+	public void setOrdiniScarico(List<OrdineScarico> ordiniScarico) {
+		this.ordiniScarico = ordiniScarico;
+	}
+
+	public List<ordineCarico> getOrdiniCarico() {
+		return OrdiniCarico;
+	}
+
+	public void setOrdiniCarico(List<ordineCarico> ordiniCarico) {
+		OrdiniCarico = ordiniCarico;
+	}
+
+	public List<Area> getAree() {
+		return aree;
+	}
+
+	public void setAree(List<Area> aree) {
+		this.aree = aree;
+	}
+
+	public List<DepositiCorrieri> getCorrieri() {
+		return corrieri;
+	}
+
+	public void setCorrieri(List<DepositiCorrieri> corrieri) {
+		this.corrieri = corrieri;
+	}
+
+	public Collection<OrarioDisponibile> getOrariDisponibili() {
 		return orariDisponibili;
 	}
 
-	public void setorariDisponibili(Collection<OrarioDisponibile> orari) {
-		this.orariDisponibili = orari;
+	public void setOrariDisponibili(Collection<OrarioDisponibile> orariDisponibili) {
+		this.orariDisponibili = orariDisponibili;
 	}
+
+	
 }

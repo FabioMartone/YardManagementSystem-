@@ -1,17 +1,15 @@
 package com.sad.yardmanagementsystem.controller.dto;
-   
-import com.sad.yardmanagementsystem.model.OrarioDisponibile;
 
-public class DepositoInfoDto {
+public class DepositoOrarioDto {
 	
 	private Long id;
 	private String orario;
 	
-	public DepositoInfoDto() {
+	public DepositoOrarioDto() {
 		super();
 	}
 	
-	public DepositoInfoDto(Long id, String orario) {
+	public DepositoOrarioDto(Long id, String orario) {
 		super();
 		this.id = id;
 		this.orario = orario;

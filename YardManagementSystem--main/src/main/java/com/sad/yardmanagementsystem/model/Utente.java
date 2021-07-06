@@ -1,6 +1,7 @@
 package com.sad.yardmanagementsystem.model;
 
-import java.util.Collection; 
+import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -55,11 +57,21 @@ public class Utente {
 	
 	private Collection<Ruolo> ruoli;
 	
+	@OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
+	@JoinTable(
+			name = "depositi_utente",
+			joinColumns = @JoinColumn(
+		            name = "IDUtente", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(
+				            name = "id_deposito", referencedColumnName = "id"))
+	private List<Deposito> depositi;
+	
 	public Utente() {
 		super();
 	}
 
-	public Utente(String ragioneSociale, String partitaIVA, String email, String password, String telefono, String tipologia,String referente,Collection<Ruolo> ruoli) {
+	public Utente(String ragioneSociale, String partitaIVA, String email, String password, String telefono, String tipologia,String referente,Collection<Ruolo> ruoli, List<Deposito> depositi) {
 		super();
 		this.ragioneSociale = ragioneSociale;
 		this.partitaIVA = partitaIVA;
@@ -69,6 +81,19 @@ public class Utente {
 		this.tipologia = tipologia;
 		this.referente = referente;
 		this.ruoli = ruoli;
+		this.depositi=depositi;
+	}
+	
+	public Utente(Utente u) {
+		super();
+		this.ragioneSociale = u.getRagioneSociale();
+		this.partitaIVA = u.getPartitaIVA();
+		this.email = u.getEmail();
+		this.password =u.getPassword();
+		this.telefono = u.getTelefono();
+		this.tipologia = u.getTipologia();
+		this.referente = u.getReferente();
+		this.ruoli = u.getRoles();
 	}
 
 	public String getTipologia() {
@@ -142,6 +167,12 @@ public class Utente {
 		this.ruoli = ruoli;
 	}
 	
-	
+	public List<Deposito> getDepositi() {
+		return depositi;
+	}
+
+	public void setDepositi(List<Deposito> depositi) {
+		this.depositi = depositi;
+	}
 	
 }

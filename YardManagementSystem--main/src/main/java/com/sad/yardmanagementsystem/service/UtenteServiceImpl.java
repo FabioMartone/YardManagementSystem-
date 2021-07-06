@@ -1,8 +1,10 @@
 package com.sad.yardmanagementsystem.service;
 
 
+import java.util.ArrayList;
 import java.util.Arrays; 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Optional;
 
@@ -19,10 +21,14 @@ import com.sad.yardmanagementsystem.repository.RepositoryDeposito;
 import com.sad.yardmanagementsystem.repository.RepositoryOrarioDisponibile;
 import com.sad.yardmanagementsystem.repository.RepositoryRuolo;
 import com.sad.yardmanagementsystem.repository.RepositoryUtente;
+import com.sad.yardmanagementsystem.model.Area;
 import com.sad.yardmanagementsystem.model.Deposito;
+import com.sad.yardmanagementsystem.model.Gestore;
 import com.sad.yardmanagementsystem.model.OrarioDisponibile;
 import com.sad.yardmanagementsystem.model.Ruolo;
-import com.sad.yardmanagementsystem.controller.dto.DepositoInfoDto;
+import com.sad.yardmanagementsystem.model.TipoArea;
+import com.sad.yardmanagementsystem.controller.dto.DepositoDto;
+import com.sad.yardmanagementsystem.controller.dto.DepositoOrarioDto;
 import com.sad.yardmanagementsystem.controller.dto.UtenteRegistrationDto;
 
 
@@ -50,37 +56,37 @@ public class UtenteServiceImpl implements UtenteService{
 
 	@Override
 	public Utente save(UtenteRegistrationDto registrationDto) {
-		Utente user = new Utente(registrationDto.getRagioneSociale(),registrationDto.getPartitaIVA(),registrationDto.getMail(),passwordEncoder.encode(registrationDto.getPassword()),registrationDto.getTelefono(),registrationDto.getTipologia(),registrationDto.getReferente(),Arrays.asList(ruoloRepository.findByNome(registrationDto.getTipologia())));
+		Utente user = new Utente(registrationDto.getRagioneSociale(),registrationDto.getPartitaIVA(),registrationDto.getMail(),passwordEncoder.encode(registrationDto.getPassword()),registrationDto.getTelefono(),registrationDto.getTipologia(),registrationDto.getReferente(),Arrays.asList(ruoloRepository.findByNome(registrationDto.getTipologia())), new ArrayList<>());
 		return userRepository.save(user);
 	}
 	
-	public void add_orario_disp(DepositoInfoDto depositoDto) {
+	public void add_orario_disp(DepositoOrarioDto depositoDto) {
 		
 		Optional<Deposito> dep = depositoRepository.findById(depositoDto.getId());
 		
 		Deposito deposito = dep.get();
 		
-		Collection<OrarioDisponibile> orari = deposito.getorariDisponibili();
+		Collection<OrarioDisponibile> orari = deposito.getOrariDisponibili();
 		
 		orari.add(new OrarioDisponibile(depositoDto.getorario()));
 		
-		deposito.setorariDisponibili(orari);
+		deposito.setOrariDisponibili(orari);
 		
 		depositoRepository.save(deposito);
 		
 	}
 	
-	public void delete_orario_disp(DepositoInfoDto depositoDto) {
+	public void delete_orario_disp(DepositoOrarioDto depositoDto) {
 		
 		Optional<Deposito> dep = depositoRepository.findById(depositoDto.getId());
 		
 		Deposito deposito = dep.get();
 		
-		Collection<OrarioDisponibile> orari = deposito.getorariDisponibili();
+		Collection<OrarioDisponibile> orari = deposito.getOrariDisponibili();
 		
 		orari.remove(new OrarioDisponibile(depositoDto.getorario()));
 		
-		deposito.setorariDisponibili(orari);
+		deposito.setOrariDisponibili(orari);
 		
 		depositoRepository.save(deposito);
 		
@@ -97,6 +103,49 @@ public class UtenteServiceImpl implements UtenteService{
 
 	}
 	
+	@Override
+	public Utente loadUserByMail(String email) throws UsernameNotFoundException {
+	
+		Utente user = userRepository.findByEmail(email);
+		if(user == null) {
+			throw new UsernameNotFoundException("Invalid username or password.");
+		}
+		return user;
+	}
+	
+	public Deposito add_deposito(DepositoDto depositoDto, Utente gestore) {
+		
+		Deposito deposito = new Deposito(depositoDto.getIndirizzo(), gestore, new ArrayList<Area>());
+		
+		return depositoRepository.save(deposito);
+		
+	}
+	
+	public void add_area(DepositoDto depositoDto) {
+		
+		Deposito d= depositoRepository.findByIndirizzo(depositoDto.getIndirizzo());
+		
+		TipoArea t;
+		
+		if(depositoDto.getTipo().equals("LAVORO")) {
+			t=TipoArea.LAVORO;
+		}
+		else {
+			t=TipoArea.SOSTA;
+		}
+		
+		Area a = new Area(depositoDto.getDescrizione(), 0, t);
+		
+		List<Area> l = d.getAree();
+		
+		l.add(a);
+		
+		d.setAree(l);
+		
+		depositoRepository.save(d);
+		
+	}
+	
 	private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Ruolo> ruoli){
 		return ruoli.stream().map(ruolo -> new SimpleGrantedAuthority(ruolo.getNome())).collect(Collectors.toList());
 	}
@@ -109,7 +158,7 @@ public class UtenteServiceImpl implements UtenteService{
 		return false;
 	}
 	
-	public boolean deposito_exists(DepositoInfoDto depositoDto) {
+	public boolean deposito_exists(DepositoOrarioDto depositoDto) {
 		
 		Optional<Deposito> dep = depositoRepository.findById(depositoDto.getId());
 		
@@ -119,13 +168,13 @@ public class UtenteServiceImpl implements UtenteService{
 		return false;
 	}
 	
-	public boolean orario_deposito_exists(DepositoInfoDto depositoDto) {
+	public boolean orario_deposito_exists(DepositoOrarioDto depositoDto) {
 		
 		Optional<Deposito> dep = depositoRepository.findById(depositoDto.getId());
 
 		Deposito deposito = dep.get();
 		
-		for(OrarioDisponibile orario : deposito.getorariDisponibili()) {
+		for(OrarioDisponibile orario : deposito.getOrariDisponibili()) {
 			if(orario.getFasciaOraria().equals(depositoDto.getorario())) {
 				return true;
 			}
@@ -134,7 +183,7 @@ public class UtenteServiceImpl implements UtenteService{
 		
 	}
 	
-	public boolean fascia_oraria_exists(DepositoInfoDto depositoDto) {
+	public boolean fascia_oraria_exists(DepositoOrarioDto depositoDto) {
 		
 		Optional<OrarioDisponibile> ora = orarioRepository.findByFasciaOraria(depositoDto.getorario());
 		
@@ -144,7 +193,7 @@ public class UtenteServiceImpl implements UtenteService{
 		return false;
 	}
 	
-	public boolean is_associated(String email, DepositoInfoDto depositoDto) {
+	public boolean is_associated(String email, DepositoOrarioDto depositoDto) {
 		
 		Utente u = userRepository.findByEmail(email);
 		
