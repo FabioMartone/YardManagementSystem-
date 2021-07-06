@@ -50,12 +50,14 @@ public class OrdineScarico extends Ordine {
 		fornitore = new Fornitore();
 	}
 
-	public OrdineScarico(Long numero, Long chiave, String dataPrevista, int numeroColli, int numeroColonne,
-			int numeroPedane, int pesoTotale,Long codiceDeposito, Fornitore fornitore) {
-		super(numero, dataPrevista, numeroColli, numeroColonne, numeroPedane, pesoTotale,codiceDeposito);
+	public OrdineScarico(Long numero, String dataPrevista, int numeroColli, int numeroColonne,
+			int numeroPedane, int pesoTotale,Long chiave,Deposito deposito, Fornitore fornitore, Prenotazione prenotazione) {
+		super(numero, dataPrevista, numeroColli, numeroColonne, numeroPedane, pesoTotale);
 		// TODO Auto-generated constructor stub
 		this.fornitore = fornitore;
 		this.chiave = chiave;
+		this.deposito = deposito;
+		this.prenotazione = prenotazione;
 	}
 	
 	public Long getChiave() {
@@ -72,6 +74,23 @@ public class OrdineScarico extends Ordine {
 	
 	public void setFornitore(Fornitore fornitore) {
 		this.fornitore = fornitore;
+	}
+	
+
+	public Deposito getDeposito() {
+		return deposito;
+	}
+
+	public void setDeposito(Deposito deposito) {
+		this.deposito = deposito;
+	}
+
+	public Prenotazione getPrenotazione() {
+		return prenotazione;
+	}
+
+	public void setPrenotazione(Prenotazione prenotazione) {
+		this.prenotazione = prenotazione;
 	}
 
 }

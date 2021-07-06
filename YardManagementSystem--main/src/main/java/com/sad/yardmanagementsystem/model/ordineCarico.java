@@ -53,47 +53,66 @@ public class ordineCarico extends Ordine {
 		super();
 	}
 
-	public ordineCarico(Long numero, Long chiave, String dataPrevista, int numeroColli, int numeroColonne,
-			int numeroPedane, int pesoTotale, Long codiceDeposito, String dataMercePronta, String clienteDestinatario, String indirizzoDestinatario) {
-		super(numero, dataPrevista, numeroColli, numeroColonne, numeroPedane, pesoTotale, codiceDeposito);
+	public ordineCarico(Long numero, String dataPrevista, int numeroColli, int numeroColonne,
+			int numeroPedane, int pesoTotale, Long chiave, Deposito deposito, String dataMercePronta, String clienteDestinatario, String indirizzoDestinatario, Prenotazione prenotazione) {
+		super(numero, dataPrevista, numeroColli, numeroColonne, numeroPedane, pesoTotale);
 		// TODO Auto-generated constructor stub
 		this.dataMercePronta = dataMercePronta;
 		this.clienteDestinatario = clienteDestinatario;
 		this.indirizzoDestinatario = indirizzoDestinatario;
 		this.chiave = chiave;
+		this.deposito = deposito;
+		this.prenotazione = prenotazione;
 	}
 
 	public Long getChiave() {
 		return chiave;
 	}
-	
+
 	public void setChiave(Long chiave) {
 		this.chiave = chiave;
 	}
-	
+
 	public String getDataMercePronta() {
 		return dataMercePronta;
 	}
-	
+
 	public void setDataMercePronta(String dataMercePronta) {
 		this.dataMercePronta = dataMercePronta;
 	}
-	
+
 	public String getClienteDestinatario() {
 		return clienteDestinatario;
 	}
-	
+
 	public void setClienteDestinatario(String clienteDestinatario) {
 		this.clienteDestinatario = clienteDestinatario;
 	}
-	
+
 	public String getIndirizzoDestinatario() {
 		return indirizzoDestinatario;
 	}
-	
-	public void setIndirizzoDestinatario() {
+
+	public void setIndirizzoDestinatario(String indirizzoDestinatario) {
 		this.indirizzoDestinatario = indirizzoDestinatario;
 	}
+
+	public Deposito getDeposito() {
+		return deposito;
+	}
+
+	public void setDeposito(Deposito deposito) {
+		this.deposito = deposito;
+	}
+
+	public Prenotazione getPrenotazione() {
+		return prenotazione;
+	}
+
+	public void setPrenotazione(Prenotazione prenotazione) {
+		this.prenotazione = prenotazione;
+	}
+
 	
 }
 

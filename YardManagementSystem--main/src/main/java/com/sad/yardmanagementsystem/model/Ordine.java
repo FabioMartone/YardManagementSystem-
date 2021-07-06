@@ -37,22 +37,19 @@ public class Ordine {
 	private int numeroPedane;
 
 	private int pesoTotale;
-
-	private Long codiceDeposito;
-		
+	
 	public Ordine() {
 		// TODO Auto-generated constructor stub
 		super();
 	}
 
-	public Ordine(Long numero, String dataPrevista, int numeroColli, int numeroColonne, int numeroPedane, int pesoTotale, Long codiceDeposito) {
+	public Ordine(Long numero, String dataPrevista, int numeroColli, int numeroColonne, int numeroPedane, int pesoTotale) {
 			super();
 			this.numero = numero;
 			this.dataPrevista = dataPrevista;
 			this.numeroColli = numeroColli;
 			this.numeroColonne = numeroColonne;
 			this.numeroPedane = numeroPedane;
-			this.codiceDeposito = codiceDeposito;
 			
 	}
 
@@ -96,14 +93,6 @@ public class Ordine {
 	public void setNumeroPedane(int numeroPedane) {
 		this.numeroPedane = numeroPedane;
 	}
-	
-	public Long getCodiceDeposito() {
-		return codiceDeposito; 
-	}
-	
-	public void setCodiceDeposito(Long codiceDeposito) {
-		this.codiceDeposito = codiceDeposito;
-	}
-	
+		
 
 }
