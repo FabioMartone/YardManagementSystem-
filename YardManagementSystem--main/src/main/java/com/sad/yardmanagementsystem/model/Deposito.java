@@ -69,13 +69,10 @@ public class Deposito {
 		super();
 	}
 
-	public Deposito(Long id, String indirizzo, Gestore gestore, Collection<OrarioDisponibile> orariDisponibili, List<DepositiCorrieri> corrieri, List<Area> Aree) {
+	public Deposito(String indirizzo, Gestore gestore,  List<Area> Aree) {
 		super();
-		this.id = id;
 		this.indirizzo = indirizzo;
 		this.gestore = gestore;
-		this.orariDisponibili = orariDisponibili;
-		this.corrieri = corrieri;
 		this.aree = aree;
 	}
 
@@ -119,6 +116,7 @@ public class Deposito {
 		return corrieri;
 	}
 	
+
 	public void setCorrieri(List<DepositiCorrieri> corrieri) {
 		this.corrieri = corrieri;
 	}
@@ -131,10 +129,20 @@ public class Deposito {
 		this.aree = aree;
 	}
 	
+	public List<ordineCarico> getOrdiniCarico() {
+		return OrdiniCarico;
+	}
 	
+	public void setOrdineCarico(List<ordineCarico> OrdiniCarico) {
+		this.OrdiniCarico = OrdiniCarico;
+	}
 	
+	public List<OrdineScarico> getOrdiniScarico() {
+		return ordiniScarico;
+	}
 	
+	public void setOrdineScarico(List<OrdineScarico> ordiniScarico) {
+		this.ordiniScarico = ordiniScarico;
+	}
 	
-	
-
 }
