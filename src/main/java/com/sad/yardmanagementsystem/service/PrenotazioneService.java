@@ -9,5 +9,5 @@ public interface PrenotazioneService {
 	Prenotazione createPrenotazione(CorrierePrenotazioneDto prenotazioneDto);
 	boolean ordine_exists(CorrierePrenotazioneDto prenotazioneDto);
 	boolean associationExists(CorrierePrenotazioneDto prenotazioneDto, Long id);
-	
+	boolean prenotazione_already_exists(CorrierePrenotazioneDto prenotazioneDto);
 }

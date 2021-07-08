@@ -48,11 +48,11 @@ public class Prenotazione {
 	private List<Movimento> movimenti;
 	
 	@OneToOne
-	@JoinColumn(name = "codice")
+	@JoinColumn(name = "codice_ordine_carico")
     private OrdineCarico OrdineCarico;
 	
 	@OneToOne
-	@JoinColumn(name = "codice")
+	@JoinColumn(name = "codice_ordine_scarico")
     private OrdineScarico ordineScarico;
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)

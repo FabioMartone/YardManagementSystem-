@@ -26,6 +26,7 @@ import com.sad.yardmanagementsystem.model.Prenotazione;
 import com.sad.yardmanagementsystem.model.Utente;
 import com.sad.yardmanagementsystem.repository.RepositoryDepositiCorrieri;
 import com.sad.yardmanagementsystem.repository.RepositoryDeposito;
+import com.sad.yardmanagementsystem.repository.RepositoryOrarioDisponibile;
 import com.sad.yardmanagementsystem.repository.RepositoryOrdineCarico;
 import com.sad.yardmanagementsystem.repository.RepositoryOrdineScarico;
 import com.sad.yardmanagementsystem.repository.RepositoryPrenotazione;
@@ -58,64 +59,83 @@ public class PrenotazioneServiceImpl implements PrenotazioneService{
 	}
 	
 
-public	boolean ordine_exists(CorrierePrenotazioneDto prenotazioneDto) {
-		
-		OrdineCarico ordineCarico = repOrdineCarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
-		OrdineScarico ordineScarico = repOrdineScarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
-		
-		if (ordineCarico==null && ordineScarico==null) {
-			return false;
-		}
-		
-		return true;
-	}
-	
-public Prenotazione createPrenotazione(CorrierePrenotazioneDto prenotazioneDto) {
-	
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			Utente corriere = repUtente.findByEmail(auth.getName());
-		
-			String data;
+	public	boolean ordine_exists(CorrierePrenotazioneDto prenotazioneDto) {
 			
 			OrdineCarico ordineCarico = repOrdineCarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
 			OrdineScarico ordineScarico = repOrdineScarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
-						
-			if (ordineCarico==null) {
-				data = ordineScarico.getDataPrevista();
-			}
-			else {
-				data = ordineCarico.getDataPrevista();
-
+			
+			if (ordineCarico==null && ordineScarico==null) {
+				return false;
 			}
 			
-		Prenotazione prenotazione = new Prenotazione(data, null, ordineCarico, ordineScarico, corriere);
+			return true;
+		}
 		
-		return repPrenotazione.save(prenotazione);
+	public Prenotazione createPrenotazione(CorrierePrenotazioneDto prenotazioneDto) {
 		
-	}
-
-
-public boolean associationExists(CorrierePrenotazioneDto prenotazioneDto, Long id_corriere) {
-	
-	Long id_deposito;
-	
-	OrdineCarico ordineCarico = repOrdineCarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
-	OrdineScarico ordineScarico = repOrdineScarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
+				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+				Utente corriere = repUtente.findByEmail(auth.getName());
+			
+				String data;
 				
-	if (ordineCarico==null) {
-		id_deposito = ordineScarico.getDeposito().getId();
-	}
-	else {
-		id_deposito = ordineCarico.getDeposito().getId();
+				OrdineCarico ordineCarico = repOrdineCarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
+				OrdineScarico ordineScarico = repOrdineScarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
+							
+				if (ordineCarico==null) {
+					data = ordineScarico.getDataPrevista();
+				}
+				else {
+					data = ordineCarico.getDataPrevista();
+	
+				}
+				
+			Prenotazione prenotazione = new Prenotazione(data, null, ordineCarico, ordineScarico, corriere);
+			
+			return repPrenotazione.save(prenotazione);
+			
+		}
+	
+	
+	public boolean associationExists(CorrierePrenotazioneDto prenotazioneDto, Long id_corriere) {
+		
+		Long id_deposito;
+		
+		OrdineCarico ordineCarico = repOrdineCarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
+		OrdineScarico ordineScarico = repOrdineScarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
+					
+		if (ordineCarico==null) {
+			id_deposito = ordineScarico.getDeposito().getId();
+		}
+		else {
+			id_deposito = ordineCarico.getDeposito().getId();
+		}
+		
+		if(repDepCorr.findByIdDepositoIdCorriere(id_deposito, id_corriere) != null) {
+			return true;
+		}
+		
+		return false;
+		
 	}
 	
-	if(repDepCorr.findByIdDepositoIdCorriere(id_deposito, id_corriere) != null) {
-		return true;
-	}
+	public boolean prenotazione_already_exists(CorrierePrenotazioneDto prenotazioneDto) {
+		
+		OrdineCarico ordineCarico = repOrdineCarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
+		OrdineScarico ordineScarico = repOrdineScarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
 	
-	return false;
+		if (ordineCarico==null) {
+			if(repPrenotazione.findByOrdineScarico(ordineScarico.getChiave()) != null) {
+				return true;
+			}
+		}	
+		else {
+			if(repPrenotazione.findByOrdineCarico(ordineCarico.getChiave()) != null) {
+				return true;
+			}
+		}
+		
+		return false;
+	}	
 	
 }
-
 	
-}

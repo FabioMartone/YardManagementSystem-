@@ -57,7 +57,7 @@ public class Deposito {
             mappedBy = "id")
 	private List<DepositiCorrieri> corrieri;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(
 			name = "orari_deposito",
 			joinColumns = @JoinColumn(
