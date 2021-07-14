@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="ISO-8859-1">
+<title>YardManagementSystem - Homepage Gestore - Gestisci Ordini</title>
+
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<!-- create navigation bar ( header) -->
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#" th:href="@{/home_gestore}">YardManagementSystem - Homepage Gestore - Gestione Ordini</a>
+			</div>
+			<div id="navbar" class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>	
+<br>
+<br>
+	<div class="container">
+		<h1>Benvenuto <span sec:authentication="principal.username"></span></h1></h1>
+	</div>
+	<div class="container">
+			<!-- logout message -->
+					<div th:if="${param.successCarico}">
+						<div class="alert alert-info">Ordine di carico inserito correttamente! Il corriere ha ricevuto l'email con il codice di prenotazione.</div>
+					</div>
+					<div th:if="${param.successScarico}">
+						<div class="alert alert-info">Ordine di scarico inserito correttamente! Il fornitore ha ricevuto l'email con il codice di prenotazione.</div>
+					</div>
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+			</div>
+		</div>
+	<div class="container my-2">
+	<p>
+  <a class="btn btn-primary" data-toggle="collapse" href="#ord-carico" role="button" aria-expanded="false" aria-controls="ord-carico">Nuovo Ordine Carico</a>
+  <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#ord-scarico" aria-expanded="false" aria-controls="ord-scarico">Nuovo Ordine Scarico</button>
+</p>
+<div class="collapse" id="ord-carico">
+		<form th:action = "@{/home_gestore/gestione-ordini/inserisciOrdineCarico}" method = "post" th:object="${ordineCarico}">
+<div class="form-row">
+    <div class="col-md-4 mb-3">
+      <label for="numeroOrdine">Numero Ordine</label>
+      <input type="text" class="form-control" th:field = "*{numero}" id="numeroOrdine" placeholder="Numero ordine" value="" required>
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="dataPrevista">Data Prevista</label>
+      <input type="text" class="form-control" th:field = "*{dataPrevista}" id="dataPrevista" placeholder="Data prevista" value="" required>
+    </div><!-- mettere datepicker !-->
+    <div class="col-md-4 mb-3">
+      <label for="numeroColli">Numero Colli</label>
+      <input type="number" class="form-control" th:field = "*{numeroColli}" id="numeroColli" placeholder="Numero colli" value="0" required>
+    </div>
+	<div class="col-md-4 mb-3">
+      <label for="numeroColonne">Numero Colonne</label>
+      <input type="number" class="form-control" th:field = "*{numeroColonne}" id="numeroColonne" placeholder="Numero colonne" value="0" required>
+    </div>
+	<div class="col-md-4 mb-3">
+      <label for="numeroPedane">Numero Pedane</label>
+      <input type="number" class="form-control" th:field = "*{numeroPedane}" id="numeroPedane" placeholder="Numero pedane" value="0" required>
+    </div>
+	<div class="col-md-4 mb-3">
+      <label for="pesoTotale">Peso totale</label>
+      <input type="number" class="form-control" th:field = "*{pesoTotale}" id="numeroColonne" placeholder="Peso totale" value="0" required>
+    </div>
+  </div>
+  <div class="form-row">
+  	<div class="col-md-4 mb-3">
+      <label for="dataMercePronta">Data Merce Pronta</label>
+      <input type="text" class="form-control" th:field = "*{dataMercePronta}" id="dataMercePronta" placeholder="Data merce pronta" value="" required>
+    </div>
+ 	<div class="col-md-4 mb-3">
+      <label for="clienteDestinatario">Cliente Destinatario</label>
+      <input type="text" class="form-control" th:field = "*{clienteDestinatario}" id="clienteDestinatario" placeholder="Cliente destinatario" value="" required>
+    </div>
+	<div class="col-md-4 mb-3">
+      <label for="indirizzoDestinatario">Indirizzo Destinatario</label>
+      <input type="text" class="form-control" th:field = "*{indirizzoDestinatario}" id="indirizzoDestinatario" placeholder="Indirizzo destinatario" value="" required>
+   </div>
+<div class="form-group col-md-8">
+	<label  class="col-form-label">Deposito </label>
+	<select  id="deposito" name="deposito" th:field="*{deposito}" >
+	<option th:each="dep : ${listDeposito}" th:value="${dep.id}" th:utext="${dep.indirizzo}"/></select>
+</div>
+<di
+v class="col-md-4 mb-3">
+ <button class="btn btn-primary" type="submit">Inserisci Carico</button>
+ </div>
+</div>
+</form>
+</div>
+<div class="collapse" id="ord-scarico">
+		<form th:action = "@{/home_gestore/gestione-ordini/inserisciOrdineScarico}" method = "post" th:object="${ordineScarico}">
+<div class="form-row">
+    <div class="col-md-4 mb-3">
+      <label for="numeroOrdine">Numero Ordine</label>
+      <input type="text" class="form-control" th:field = "*{numero}" id="numeroOrdine" placeholder="Numero ordine" value="" required>
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="dataPrevista">Data Prevista</label>
+      <input type="text" class="form-control" th:field = "*{dataPrevista}" id="dataPrevista" placeholder="Data prevista" value="" required>
+    </div><!-- mettere datepicker !-->
+    <div class="col-md-4 mb-3">
+      <label for="numeroColli">Numero Colli</label>
+      <input type="number" class="form-control" th:field = "*{numeroColli}" id="numeroColli" placeholder="Numero colli" value="0" required>
+    </div>
+	<div class="col-md-4 mb-3">
+      <label for="numeroColonne">Numero Colonne</label>
+      <input type="number" class="form-control" th:field = "*{numeroColonne}" id="numeroColonne" placeholder="Numero colonne" value="0" required>
+    </div>
+	<div class="col-md-4 mb-3">
+      <label for="numeroPedane">Numero Pedane</label>
+      <input type="number" class="form-control" th:field = "*{numeroPedane}" id="numeroPedane" placeholder="Numero pedane" value="0" required>
+    </div>
+	<div class="col-md-4 mb-3">
+      <label for="pesoTotale">Peso totale</label>
+      <input type="number" class="form-control" th:field = "*{pesoTotale}" id="numeroColonne" placeholder="Peso totale" value="0" required>
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="mailFornitore">Mail Fornitore</label>
+      <input type="text" class="form-control" th:field = "*{mailFornitore}" id="mailFornitore" placeholder="Mail fornitore" value="" required>
+	</div>
+	<div class="col-md-4 mb-3">
+      <label for="ragioneSocialeFornitore">Ragione Sociale Fornitore</label>
+      <input type="text" class="form-control" th:field = "*{ragioneSocialeFornitore}" id="ragioneSocialeFornitore" placeholder="Ragione sociale fornitore" value="" required>
+	</div>
+	<div class="col-md-4 mb-3">
+      <label for="indirizzoFornitore">Indirizzo Fornitore</label>
+      <input type="text" class="form-control" th:field = "*{indirizzoFornitore}" id="indirizzoFornitore" placeholder="Indirizzo fornitore" value="" required>
+	</div>
+	<div class="col-md-4 mb-3">
+      <label for="telefonoFornitore">Telefono Fornitore</label>
+      <input type="text" class="form-control" th:field = "*{telefonoFornitore}" id="telefonoFornitore" placeholder="Telefono fornitore" value="" required>
+	</div>
+	 <div class="col-md-4 mb-3">
+<label  class="col-form-label">Deposito </label>
+<select  id="deposito" name="deposito" th:field="*{deposito}" >
+<option th:each="dep : ${listDeposito}" th:value="${dep.id}" th:utext="${dep.indirizzo}"/></select>
+</div>
+<div class="col-md-4 mb-3">
+ <button class="btn btn-primary" type="submit">Inserisci Scarico ed invia e-mail al Fornitore</button>
+ </div>
+ </div>
+ 
+</form>
+</div>
+
+	
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Visualizza Ordini</title>
+<link rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+    integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+    crossorigin="anonymous">
+</head>
+<body>
+
+ 
+
+    <!-- create navigation bar ( header) -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed"
+                    data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+                    aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span> <span
+                        class="icon-bar"></span> <span class="icon-bar"></span> <span
+                        class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://localhost:8080/home_gestore" th:href="@{/home_gestore}">Home</a>
+                <a class="navbar-brand" href="http://localhost:8080/logout" th:href="@{/logout}">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+ 
+
+<br>
+<br>
+    <!-- Create HTML registration form -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+
+				
+				<tr th:each="ordiniCaricoMovimenti : ${View.OrdiniCaricoMovimenti}">
+								
+				<h2>Ordine Carico</h2>
+				<table border="1" class = "table table-striped table-responsive-md">
+						<thead>
+							<tr>
+								<th>
+										Chiave dell'ordine</a>
+								</th>
+								<th>
+										Deposito</a>
+								</th>
+								<th>
+										Data merce pronta</a>
+								</th>
+								<th>
+										Numero</a>
+								</th>
+								<th>
+										Data prevista</a>
+								</th>
+								<th>
+										Numero colli</a>
+								</th>
+								<th>
+										Numero colonne</a>
+								</th>
+								<th>
+										Numero pedane</a>
+								</th>
+								<th>
+										Peso totale</a>
+								</th>
+								<th>
+										Chiave della prenotazione</a>
+								</th>
+								<th>
+										Cliente destinatario</a>
+								</th>
+								<th>
+										Indirizzo destinatario</a>
+							</tr>
+						</thead>
+						
+						<tbody>
+								
+								<td th:text="${ordiniCaricoMovimenti.ordineCarico.chiave}">
+								<td th:text="${ordiniCaricoMovimenti.ordineCarico.deposito.indirizzo}">
+								<td th:text="${ordiniCaricoMovimenti.ordineCarico.dataMercePronta}">
+								<td th:text="${ordiniCaricoMovimenti.ordineCarico.numero}">
+								<td th:text="${ordiniCaricoMovimenti.ordineCarico.dataPrevista}">
+								<td th:text="${ordiniCaricoMovimenti.ordineCarico.numeroColli}">
+								<td th:text="${ordiniCaricoMovimenti.ordineCarico.numeroColonne}">
+								<td th:text="${ordiniCaricoMovimenti.ordineCarico.numeroPedane}">
+								<td th:text="${ordiniCaricoMovimenti.ordineCarico.pesoTotale}">
+								<td th:text="${ordiniCaricoMovimenti.ordineCarico.chiavePrenotazione}">
+								<td th:text="${ordiniCaricoMovimenti.ordineCarico.clienteDestinatario}">
+								<td th:text="${ordiniCaricoMovimenti.ordineCarico.indirizzoDestinatario}"></td>
+								
+								</tbody>
+						</table>
+	
+								<h3>Movimenti dell'ordine carico</h3>
+								<table border="1" class = "table table-striped table-responsive-md">
+									<thead>
+										<tr>
+										<th>
+											Id</a>
+										</th>
+										<th>
+											Ora inizio</a>
+										</th>
+										<th>
+											Ora fine</a>
+										</th>
+										<th>
+											Tipo Area</a>
+										</th>
+										<th>
+											Descrizione</a>
+										</tr>
+									</thead>
+						
+									<tbody>
+						
+										<tr th:each="movimento : ${ordiniCaricoMovimenti.movimenti}">
+													<td th:text="${movimento.id}">
+													<td th:text="${movimento.oraInizio}">
+													<td th:text="${movimento.oraFine}">
+													<td th:text="${movimento.area.tipo}">
+													<td th:text="${movimento.area.descrizione}"></td>
+											</tr>
+								
+						
+									</tbody>
+								</table>
+								
+								<br>
+								<br>
+								<br>
+						
+						</tr>
+
+</body>
+</html>
