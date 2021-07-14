@@ -49,14 +49,14 @@
                 </div>
                 
            
-                <h1>Inserisci la chiave dell'ordine</h1>
+                <h1>Inserisci la chiave della prenotazione</h1>
 
  
 
                 <form th:action="@{/home_corriere/effettua_prenotazione}" method="post" th:object="${Prenotazione}">
                     <div class="form-group">
-                        <label class="control-label" for="chiaveOrdine"> Chiave dell'ordine </label>
-                        <input id="chiaveOrdine" class="form-control" type="text" th:field="*{chiaveOrdine}"
+                        <label class="control-label" for="chiavePrenotazione"> Chiave della prenotazione </label>
+                        <input id="chiavePrenotazione" class="form-control" type="text" th:field="*{chiavePrenotazione}"
                             required autofocus="autofocus" />
                     </div>
 

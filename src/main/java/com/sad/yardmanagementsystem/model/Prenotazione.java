@@ -1,10 +1,7 @@
 package com.sad.yardmanagementsystem.model;
 
-import java.util.Collection;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -13,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -21,7 +17,7 @@ import java.util.List;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-
+ 
 @Entity
 @Table(name = "Prenotazioni")
 
@@ -60,18 +56,49 @@ public class Prenotazione {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Utente corriere;
 	
+	@Column(name = "nome_corriere")
+	private String nomeCorriere;
+	
+	@Column(name = "cognome_corriere")
+	private String cognomeCorriere;
+	
+	@Column(name = "tipo_documento_corriere")
+	private String tipoDocumentoCorriere;
+	
+	@Column(name = "numero_documento_corriere")
+	private String numeroDocumentoCorriere;
+	
+	@Column(name = "telefono_corriere")
+	private String telefonoCorriere;
+	
+	@Column(name = "email_corriere")
+	private String emailCorriere;
+	
+	@Column(name = "targa_corriere")
+	private String targaCorriere;
+	
 	public Prenotazione() {
 		// TODO Auto-generated constructor stub
 		super();
 	}
 	
-	public Prenotazione(String data, String fasciaOraria, OrdineCarico OrdineCarico,OrdineScarico ordineScarico, Utente corriere) {
+	public Prenotazione(String data, String fasciaOraria, OrdineCarico OrdineCarico,
+			OrdineScarico ordineScarico, Utente corriere, String nomeCorriere, 
+			String cognomeCorriere, String tipoDocumentoCorriere,
+			String numeroDocumentoCorriere, String telefonoCorriere, String emailCorriere, String targaCorriere) {
 		super();
 		this.data = data;
 		this.fasciaOraria = fasciaOraria;
 		this.OrdineCarico = OrdineCarico;
 		this.ordineScarico = ordineScarico;
 		this.corriere = corriere;
+		this.nomeCorriere = nomeCorriere;
+		this.cognomeCorriere = cognomeCorriere;
+		this.tipoDocumentoCorriere = tipoDocumentoCorriere;
+		this.numeroDocumentoCorriere = numeroDocumentoCorriere;
+		this.telefonoCorriere = telefonoCorriere;
+		this.emailCorriere = emailCorriere;
+		this.targaCorriere = targaCorriere;
 	}
 	
 	public Long getCodice() {
@@ -130,5 +157,47 @@ public class Prenotazione {
 		this.corriere = corriere;
 	}
 	
+	public String getNomeCorriere() {
+		return nomeCorriere;
+	}
+	public void setNomeCorriere(String nome) {
+		this.nomeCorriere = nome;
+	}
+	public String getCognomeCorriere() {
+		return cognomeCorriere;
+	}
+	public void setCognomeCorriere(String cognome) {
+		this.cognomeCorriere = cognome;
+	}
+	public String getTipoDocumentoCorriere() {
+		return tipoDocumentoCorriere;
+	}
+	public void setTipoDocumentoCorriere(String tipoDocumento) {
+		this.tipoDocumentoCorriere = tipoDocumento;
+	}
+	public String getNumeroDocumentoCorriere() {
+		return numeroDocumentoCorriere;
+	}
+	public void setNumeroDocumentoCorriere(String numeroDocumento) {
+		this.numeroDocumentoCorriere = numeroDocumento;
+	}
+	public String getTelefonoCorriere() {
+		return telefonoCorriere;
+	}
+	public void setTelefonoCorriere(String telefono) {
+		this.telefonoCorriere = telefono;
+	}
+	public String getEmailCorriere() {
+		return emailCorriere;
+	}
+	public void setEmailCorriere(String email) {
+		this.emailCorriere = email;
+	}
+	public String getTargaCorriere() {
+		return targaCorriere;
+	}
+	public void setTargaCorriere(String targa) {
+		this.targaCorriere = targa;
+	}
 
 }

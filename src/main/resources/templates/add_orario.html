@@ -47,7 +47,7 @@
 				
 				<!-- error message -->
 				<div th:if="${param.error1}">
-					<div class="alert alert-danger">L'orario inserito è gia stato inserito.</div>
+					<div class="alert alert-danger">L'orario inserito e' gia' stato inserito.</div>
 				</div>
 				
 				<!-- error message -->
@@ -64,16 +64,17 @@
 				<h1>Inserisci i dati</h1>
 
 				<form th:action="@{/home_gestore/add_orario}" method="post" th:object="${DepositoOrario}">
-					<div class="form-group">
-						<label class="control-label" for="id"> ID Deposito </label>
-						<input id="id" class="form-control" type="text" th:field="*{id}"
-							required autofocus="autofocus" />
+                    <div class="form-group col-md-8">
+						<label  class="col-form-label">Deposito </label>
+						<select  id="id" name="id" th:field="*{id}" >
+						<option th:each="dep : ${listDeposito}" th:value="${dep.id}" th:utext="${dep.indirizzo}"/></select>
 					</div>
 
-					<div class="form-group">
-						<label class="control-label" for="orario"> Nuovo orario disponibile (fasce orarie da 1 ora, es: 00-01, 01-02 ecc..) </label> <input
-							id="orario" class="form-control" type="text" th:field="*{orario}"
-							required autofocus="autofocus" />
+					<div class="form-group col-md-8">
+						<label  class="col-form-label">Tipo </label>
+						<select id="orario" name="orario" th:field="*{orario}" >
+						<option th:each="orario : ${listOrario}" th:value="${orario.fasciaOraria}" th:utext="${orario.fasciaOraria}"/></select>
+						</select>
 					</div>
 
 					<div class="form-group">

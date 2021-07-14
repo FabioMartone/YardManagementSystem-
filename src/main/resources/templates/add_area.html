@@ -56,13 +56,15 @@
                         <input id="descrizione" class="form-control" type="text" th:field="*{descrizione}"
                             required autofocus="autofocus" />
                     </div>
-                    
-                     <div class="form-group">
-                        <label class="control-label" for="tipo"> Tipo (LAVORO, SOSTA) </label>
-                        <input id="tipo" class="form-control" type="text" th:field="*{tipo}"
-                            required autofocus="autofocus" />
-                    </div>
-
+                    <div class="form-group col-md-8">
+						<label  class="col-form-label">Tipo </label>
+						<select  id="tipo" name="tipo" th:field="*{tipo}" >
+						<option th:value="LAVORO" th:utext="LAVORO"/>
+						<option th:value="SOSTA" th:utext="SOSTA"/>
+						</select>	
+					<input name = "indirizzo" type="hidden" class="form-control" th:value= "${indirizzo}" id="indirizzo" required>
+					</div>
+					
                     <div class="form-group">
                         <button type="submit" class="btn btn-success" >Aggiungi area</button>
                         
@@ -71,6 +73,13 @@
                         <br>
                         
                         <a class="navbar-brand" href="#" th:href="@{/home_gestore/visualizza_depositi?success}">Fine</a>
+                    </div>
+                </form>
+                
+                <form th:action="@{/home_gestore/add_deposito/add_area/inserisci_deposito}" method="post" th:object="${Deposito}">		
+                    <div class="form-group">
+                    	<input name = "indirizzo" type="hidden" class="form-control" th:value= "${indirizzo}" id="indirizzo" required>
+                        <button type="submit" class="btn btn-success" >Fine</button>
                     </div>
                 </form>
             </div>

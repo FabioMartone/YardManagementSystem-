@@ -5,15 +5,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 
 @Entity
-@Table(name =  "Fornitore",uniqueConstraints = @UniqueConstraint(columnNames = "mail"))
+@Table(name =  "fornitore")
 public class Fornitore {
 
 	@Id
@@ -32,23 +29,21 @@ public class Fornitore {
 	@Column(name = "telefono")
 	private String telefono;
 	
-	@OneToOne
-	@MapsId
-	@JoinColumn(name = "id")
-	private OrdineScarico ordineScarico;
+	@OneToOne(mappedBy = "fornitore")
+    private OrdineScarico ordineScarico;
+	
 	
 	public Fornitore(){
 		super();
 	}
 	
-	public Fornitore(Long id, String mail, String ragioneSociale, String indirizzo, String telefono, OrdineScarico ordineScarico) {
+	public Fornitore(String mail, String ragioneSociale, String indirizzo, String telefono) {
 		super();
-		this.id = id;
 		this.mail = mail;
 		this.ragioneSociale = ragioneSociale;
 		this.indirizzo = indirizzo;
 		this.telefono = telefono;
-		this.ordineScarico = ordineScarico;
+		
 	}
 	
 	public Long getId() {
@@ -91,13 +86,6 @@ public class Fornitore {
 		this.telefono = telefono;
 	}
 	
-	public OrdineScarico getOrdineScarico() {
-		return ordineScarico;
-	}
-	
-	public void setOrdineScarico(OrdineScarico ordineScarico) {
-		this.ordineScarico = ordineScarico;
-	}
+
 	
 }
-

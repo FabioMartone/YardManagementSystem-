@@ -1,6 +1,5 @@
 package com.sad.yardmanagementsystem.model;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -12,7 +11,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -64,7 +62,7 @@ public class Deposito {
 		            name = "id_deposito", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(
 				            name = "fascia_oraria", referencedColumnName = "fascia_oraria"))
-	private Collection<OrarioDisponibile> orariDisponibili;
+	private List<OrarioDisponibile> orariDisponibili;
 	
 	public Deposito() {
 		super();
@@ -133,11 +131,11 @@ public class Deposito {
 		this.corrieri = corrieri;
 	}
 
-	public Collection<OrarioDisponibile> getOrariDisponibili() {
+	public List<OrarioDisponibile> getOrariDisponibili() {
 		return orariDisponibili;
 	}
 
-	public void setOrariDisponibili(Collection<OrarioDisponibile> orariDisponibili) {
+	public void setOrariDisponibili(List<OrarioDisponibile> orariDisponibili) {
 		this.orariDisponibili = orariDisponibili;
 	}
 

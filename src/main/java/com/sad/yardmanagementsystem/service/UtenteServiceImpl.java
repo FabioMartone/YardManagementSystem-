@@ -1,12 +1,8 @@
 package com.sad.yardmanagementsystem.service;
 
-
-import java.util.ArrayList;
 import java.util.Arrays; 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,18 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.sad.yardmanagementsystem.model.Utente;
-import com.sad.yardmanagementsystem.repository.RepositoryDeposito;
-import com.sad.yardmanagementsystem.repository.RepositoryOrarioDisponibile;
 import com.sad.yardmanagementsystem.repository.RepositoryRuolo;
 import com.sad.yardmanagementsystem.repository.RepositoryUtente;
-import com.sad.yardmanagementsystem.model.Area;
-import com.sad.yardmanagementsystem.model.Deposito;
-import com.sad.yardmanagementsystem.model.Gestore;
-import com.sad.yardmanagementsystem.model.OrarioDisponibile;
 import com.sad.yardmanagementsystem.model.Ruolo;
-import com.sad.yardmanagementsystem.model.TipoArea;
-import com.sad.yardmanagementsystem.controller.dto.DepositoDto;
-import com.sad.yardmanagementsystem.controller.dto.DepositoOrarioDto;
 import com.sad.yardmanagementsystem.controller.dto.UtenteRegistrationDto;
 
 
@@ -80,6 +67,11 @@ public class UtenteServiceImpl implements UtenteService{
 			throw new UsernameNotFoundException("Invalid username or password.");
 		}
 		return user;
+	}
+	
+	@Override
+	public Utente loadUserById(Long id) {
+		return userRepository.findByid_utente(id);
 	}
 	
 	

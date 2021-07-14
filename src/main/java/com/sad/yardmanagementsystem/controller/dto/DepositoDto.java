@@ -1,5 +1,7 @@
 package com.sad.yardmanagementsystem.controller.dto;
 
+import java.util.List;
+
 
 public class DepositoDto {
 	
@@ -7,7 +9,7 @@ public class DepositoDto {
 	private String descrizione;
 	private String tipo;
 	
-	public DepositoDto(String indirizzo, String descrizione, int flag, String tipo) {
+	public DepositoDto(String indirizzo, String descrizione, int flag, String tipo, List<AreaDto> aree) {
 		super();
 		this.indirizzo = indirizzo;
 		this.descrizione = descrizione;
@@ -41,7 +43,5 @@ public class DepositoDto {
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
-	
-	
 	
 }

@@ -1,32 +1,17 @@
 package com.sad.yardmanagementsystem.service;
 
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.sad.yardmanagementsystem.controller.dto.CorrierePrenotazioneDto;
-import com.sad.yardmanagementsystem.controller.dto.DepositoDto;
-import com.sad.yardmanagementsystem.model.Area;
-import com.sad.yardmanagementsystem.model.DepositiCorrieri;
-import com.sad.yardmanagementsystem.model.Deposito;
-import com.sad.yardmanagementsystem.model.Ordine;
 import com.sad.yardmanagementsystem.model.OrdineScarico;
 import com.sad.yardmanagementsystem.model.Prenotazione;
 import com.sad.yardmanagementsystem.model.Utente;
 import com.sad.yardmanagementsystem.repository.RepositoryDepositiCorrieri;
-import com.sad.yardmanagementsystem.repository.RepositoryDeposito;
-import com.sad.yardmanagementsystem.repository.RepositoryOrarioDisponibile;
 import com.sad.yardmanagementsystem.repository.RepositoryOrdineCarico;
 import com.sad.yardmanagementsystem.repository.RepositoryOrdineScarico;
 import com.sad.yardmanagementsystem.repository.RepositoryPrenotazione;
@@ -49,9 +34,6 @@ public class PrenotazioneServiceImpl implements PrenotazioneService{
 	private RepositoryPrenotazione repPrenotazione;
 	
 	@Autowired
-	private RepositoryDeposito repDeposito;
-	
-	@Autowired
 	private RepositoryDepositiCorrieri repDepCorr;
 	
 	public PrenotazioneServiceImpl() {
@@ -61,8 +43,8 @@ public class PrenotazioneServiceImpl implements PrenotazioneService{
 
 	public	boolean ordine_exists(CorrierePrenotazioneDto prenotazioneDto) {
 			
-			OrdineCarico ordineCarico = repOrdineCarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
-			OrdineScarico ordineScarico = repOrdineScarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
+			OrdineCarico ordineCarico = repOrdineCarico.findByChiavePrenotazione(prenotazioneDto.getChiavePrenotazione());
+			OrdineScarico ordineScarico = repOrdineScarico.findByChiavePrenotazione(prenotazioneDto.getChiavePrenotazione());
 			
 			if (ordineCarico==null && ordineScarico==null) {
 				return false;
@@ -78,8 +60,8 @@ public class PrenotazioneServiceImpl implements PrenotazioneService{
 			
 				String data;
 				
-				OrdineCarico ordineCarico = repOrdineCarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
-				OrdineScarico ordineScarico = repOrdineScarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
+				OrdineCarico ordineCarico = repOrdineCarico.findByChiavePrenotazione(prenotazioneDto.getChiavePrenotazione());
+				OrdineScarico ordineScarico = repOrdineScarico.findByChiavePrenotazione(prenotazioneDto.getChiavePrenotazione());
 							
 				if (ordineCarico==null) {
 					data = ordineScarico.getDataPrevista();
@@ -89,7 +71,9 @@ public class PrenotazioneServiceImpl implements PrenotazioneService{
 	
 				}
 				
-			Prenotazione prenotazione = new Prenotazione(data, null, ordineCarico, ordineScarico, corriere);
+			Prenotazione prenotazione = new Prenotazione(data, prenotazioneDto.getOrario(), ordineCarico, ordineScarico, corriere,
+					prenotazioneDto.getNome(), prenotazioneDto.getCognome(), prenotazioneDto.getTipoDocumento(), 
+					prenotazioneDto.getNumeroDocumento(), prenotazioneDto.getTelefono(), prenotazioneDto.getTelefono(), prenotazioneDto.getTarga());
 			
 			return repPrenotazione.save(prenotazione);
 			
@@ -100,8 +84,8 @@ public class PrenotazioneServiceImpl implements PrenotazioneService{
 		
 		Long id_deposito;
 		
-		OrdineCarico ordineCarico = repOrdineCarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
-		OrdineScarico ordineScarico = repOrdineScarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
+		OrdineCarico ordineCarico = repOrdineCarico.findByChiavePrenotazione(prenotazioneDto.getChiavePrenotazione());
+		OrdineScarico ordineScarico = repOrdineScarico.findByChiavePrenotazione(prenotazioneDto.getChiavePrenotazione());
 					
 		if (ordineCarico==null) {
 			id_deposito = ordineScarico.getDeposito().getId();
@@ -120,8 +104,8 @@ public class PrenotazioneServiceImpl implements PrenotazioneService{
 	
 	public boolean prenotazione_already_exists(CorrierePrenotazioneDto prenotazioneDto) {
 		
-		OrdineCarico ordineCarico = repOrdineCarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
-		OrdineScarico ordineScarico = repOrdineScarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
+		OrdineCarico ordineCarico = repOrdineCarico.findByChiavePrenotazione(prenotazioneDto.getChiavePrenotazione());
+		OrdineScarico ordineScarico = repOrdineScarico.findByChiavePrenotazione(prenotazioneDto.getChiavePrenotazione());
 	
 		if (ordineCarico==null) {
 			if(repPrenotazione.findByOrdineScarico(ordineScarico.getChiave()) != null) {
@@ -136,6 +120,49 @@ public class PrenotazioneServiceImpl implements PrenotazioneService{
 		
 		return false;
 	}	
+	
+	public boolean telefono_error_exists(String telefono) {
+		
+		int ok_tel=1;
+		for (int i = 0; i < telefono.length() && (ok_tel==1); i++) {
+			if(!Character.isDigit(telefono.charAt(i))){
+				ok_tel=0;
+			}
+		}
+		if(ok_tel==0) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean email_error_exists(String email) {
+		
+		int ok_mail=0;
+		int j=0;
+		while (j != email.length() && email.charAt(j) != '@') {
+			j = j + 1;
+		}
+		if (j != email.length()) {
+			ok_mail = 1;
+		}
+		while(j != email.length() && email.charAt(j) != '.') {
+			j = j + 1;
+		}
+		if (j == email.length()) {
+			ok_mail = 0;
+		}
+		if (ok_mail == 0) {
+			return true;
+		}
+		return false;
+	}
+	
+	public List<Prenotazione> getPrenotazioniFromIdcorriere(Long id_corriere){
+		
+		List<Prenotazione> pren = repPrenotazione.findByIdCorriere(id_corriere);
+		
+		return pren;
+	}
 	
 }
 	

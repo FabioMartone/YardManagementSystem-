@@ -1,26 +1,9 @@
 package com.sad.yardmanagementsystem.model;
 
-import java.util.Collection;
-import java.util.List;
-
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -28,7 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @MappedSuperclass
 public class Ordine {
 	
-	private Long numero;
+	private String numero;
 	
 	private String dataPrevista;
 	
@@ -38,28 +21,37 @@ public class Ordine {
 	
 	private int numeroPedane;
 
-	private int pesoTotale;
+	private float pesoTotale;
+	
+	private String chiavePrenotazione;
+	
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+	private Deposito deposito;
 	
 	public Ordine() {
 		// TODO Auto-generated constructor stub
 		super();
 	}
 
-	public Ordine(Long numero, String dataPrevista, int numeroColli, int numeroColonne, int numeroPedane, int pesoTotale) {
+	public Ordine(String numero, String dataPrevista, int numeroColli, int numeroColonne, int numeroPedane, float pesoTotale, String chiavePrenotazione, Deposito deposito) {
 			super();
 			this.numero = numero;
 			this.dataPrevista = dataPrevista;
 			this.numeroColli = numeroColli;
 			this.numeroColonne = numeroColonne;
 			this.numeroPedane = numeroPedane;
+			this.chiavePrenotazione = chiavePrenotazione;
+			this.deposito=deposito;
 			
 	}
 
-	public Long getNumero() {
+	public String getNumero() {
 		return numero;
 	}
 	
-	public void setNumero(Long numero) {
+	public void setNumero(String numero) {
 		this.numero = numero;
 	}
 	
@@ -96,13 +88,31 @@ public class Ordine {
 		this.numeroPedane = numeroPedane;
 	}
 	
-	public int getPesoTotale() {
+	public float getPesoTotale() {
 		return pesoTotale;
 	}
 	
-	public void setPesoTotale(int peso) {
+	public void setPesoTotale(float peso) {
 		this.pesoTotale = peso;
 	}
+
+	public String getChiavePrenotazione() {
+		return chiavePrenotazione;
+	}
+
+	public void setChiavePrenotazione(String chiavePrenotazione) {
+		this.chiavePrenotazione = chiavePrenotazione;
+	}
+
+	public Deposito getDeposito() {
+		return deposito;
+	}
+
+	public void setDeposito(Deposito deposito) {
+		this.deposito = deposito;
+	}
+	
+	
 		
 
 }

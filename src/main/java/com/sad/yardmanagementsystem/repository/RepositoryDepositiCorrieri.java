@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.sad.yardmanagementsystem.model.DepositiCorrieri;
+import com.sad.yardmanagementsystem.model.Utente;
 
 @Repository
 public interface RepositoryDepositiCorrieri extends JpaRepository<DepositiCorrieri, Long>{
@@ -19,4 +20,6 @@ public interface RepositoryDepositiCorrieri extends JpaRepository<DepositiCorrie
 	@Query("SELECT d FROM depositi_corrieri d WHERE (d.deposito.id = ?1 AND d.corriere.id = ?2) ")
 	DepositiCorrieri findByIdDepositoIdCorriere(Long id_deposito, Long id_corriere);
 		
+	@Query("SELECT d.corriere FROM depositi_corrieri d WHERE (d.deposito.id = ?1) ")
+	List<Utente> findByIdDeposito(Long id_deposito);
 }

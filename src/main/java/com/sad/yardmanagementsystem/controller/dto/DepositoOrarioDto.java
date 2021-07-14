@@ -21,10 +21,10 @@ public class DepositoOrarioDto {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getorario() {
+	public String getOrario() {
 		return orario;
 	}
-	public void setorario(String orario) {
+	public void setOrario(String orario) {
 		this.orario = orario;
 	}
 

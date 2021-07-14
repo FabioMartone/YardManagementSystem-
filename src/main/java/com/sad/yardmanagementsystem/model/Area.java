@@ -32,7 +32,7 @@ public class Area {
 	private TipoArea tipo;
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_deposito", nullable = false)
+    @JoinColumn(name = "id_deposito")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Deposito deposito;
 	

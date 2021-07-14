@@ -30,6 +30,7 @@
 					<li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></li>
 					<li sec:authorize="isAuthenticated()"><a th:href="@{/home_corriere/gestione-associazioni}">Gestisci Associazioni Depositi</a></li>
 					<li sec:authorize="isAuthenticated()"><a th:href="@{/home_corriere/effettua_prenotazione}">Prenota un ordine</a></li>
+					<li sec:authorize="isAuthenticated()"><a th:href="@{/home_corriere/gestione-ordini}">Visualizza ordini prenotati</a></li>
 				</ul>
 			</div>
 		</div>

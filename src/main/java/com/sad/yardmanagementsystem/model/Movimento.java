@@ -1,7 +1,6 @@
 package com.sad.yardmanagementsystem.model;
 
-import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
+import javax.persistence.Column; 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -33,18 +32,24 @@ public class Movimento {
     @JoinColumn(name = "id_deposito", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Deposito deposito;
+	
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_area", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Area area;
 
 	public Movimento() {
 		// TODO Auto-generated constructor stub
 		super();
 	}
 	
-	public Movimento(Long id, int oraInizio, int oraFine, Deposito deposito) {
+	public Movimento(Long id, int oraInizio, int oraFine, Deposito deposito, Area area) {
 		super();
 		this.id = id;
 		this.oraInizio = oraInizio;
 		this.oraFine = oraFine;
 		this.deposito = deposito;
+		this.area=area;
 	}
 	
 	public Long getId() {
@@ -79,6 +84,12 @@ public class Movimento {
 		this.deposito = deposito;
 	}
 	
+	public Area getArea() {
+		return area;
+	}
 	
+	public void setArea(Area area) {
+		this.area = area;
+	}
 
 }

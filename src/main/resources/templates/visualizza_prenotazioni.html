@@ -58,9 +58,10 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:each="prenotazione : ${listPrenotazioni}">
-							<td th:text="${prenotazione.data}">
-								<td th:text="${prenotazione.fasciaOraria}">
+							<tr th:each="view : ${list}">
+							<td th:text="${view.data}">
+							<td th:text="${view.fasciaOraria}">
+							<td th:text="${view.indirizzo}">
 							</tr>
 						</tbody>
 					</table>

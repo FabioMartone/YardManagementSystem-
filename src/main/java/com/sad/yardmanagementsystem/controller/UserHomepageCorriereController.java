@@ -1,6 +1,6 @@
 package com.sad.yardmanagementsystem.controller;
 
-import java.util.ArrayList;
+import java.util.ArrayList;    
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -15,19 +15,21 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import com.sad.yardmanagementsystem.controller.dto.DepositoOrarioDto;
+import com.sad.yardmanagementsystem.model.Area;
 import com.sad.yardmanagementsystem.model.DepositiCorrieri;
 import com.sad.yardmanagementsystem.model.Deposito;
 import com.sad.yardmanagementsystem.model.OrarioDisponibile;
+import com.sad.yardmanagementsystem.model.Ordine;
 import com.sad.yardmanagementsystem.model.OrdineCarico;
 import com.sad.yardmanagementsystem.model.OrdineScarico;
 import com.sad.yardmanagementsystem.model.Prenotazione;
+import com.sad.yardmanagementsystem.model.TipoArea;
 import com.sad.yardmanagementsystem.model.Utente;
+import com.sad.yardmanagementsystem.repository.RepositoryArea;
 import com.sad.yardmanagementsystem.repository.RepositoryDepositiCorrieri;
 import com.sad.yardmanagementsystem.repository.RepositoryDeposito;
-import com.sad.yardmanagementsystem.repository.RepositoryOrariDeposito;
-import com.sad.yardmanagementsystem.repository.RepositoryOrarioDisponibile;
 import com.sad.yardmanagementsystem.repository.RepositoryOrdineCarico;
 import com.sad.yardmanagementsystem.repository.RepositoryOrdineScarico;
 import com.sad.yardmanagementsystem.repository.RepositoryPrenotazione;
@@ -35,7 +37,10 @@ import com.sad.yardmanagementsystem.repository.RepositoryUtente;
 import com.sad.yardmanagementsystem.service.EmailService;
 import com.sad.yardmanagementsystem.service.PrenotazioneService;
 import com.sad.yardmanagementsystem.service.UtenteService;
+
 import com.sad.yardmanagementsystem.controller.dto.CorrierePrenotazioneDto;
+import com.sad.yardmanagementsystem.controller.dto.ViewOrdine;
+import com.sad.yardmanagementsystem.controller.dto.ViewPrenotazioni;
 
 
 @Controller
@@ -60,6 +65,8 @@ public class UserHomepageCorriereController {
 	private RepositoryOrdineScarico repOrdineScarico;
 	@Autowired
 	private RepositoryPrenotazione prenotazioneRepository;
+	@Autowired
+	private RepositoryArea areaRepository;
 	
 	public UserHomepageCorriereController(UtenteService userService) {
 		super();
@@ -94,7 +101,6 @@ public class UserHomepageCorriereController {
 		    		depositi_id.add(dc.getDeposito().getId());
 		    	}
 		    }
-		    
 		    
 		    model.addAttribute("listDepositiAssociati",depositi_associati);
 		    model.addAttribute("listDepositiInAttesa",depositi_in_attesa);
@@ -155,11 +161,13 @@ public class UserHomepageCorriereController {
 			return new CorrierePrenotazioneDto();
     }
 	
-	Long deposito_id;
-	Long codice_prenotazione;
-	
 	@PostMapping("/effettua_prenotazione")
-	public String effettuaPrenotazione(@ModelAttribute("Prenotazione") CorrierePrenotazioneDto prenotazioneDto) {
+	public String effettuaPrenotazione(@ModelAttribute("Prenotazione") CorrierePrenotazioneDto prenotazioneDto, Model model) {
+		
+		Long deposito_id;
+		Long chiave_carico=0l;
+		Long chiave_scarico=0l;
+		String chiavePrenotazione;
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("CORRIERE"))) {
@@ -176,76 +184,208 @@ public class UserHomepageCorriereController {
 				return "redirect:/home_corriere/effettua_prenotazione?error0";
 			}
 			
-			OrdineCarico ordineCarico = repOrdineCarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
-			OrdineScarico ordineScarico = repOrdineScarico.findByChiaveOrdine(prenotazioneDto.getChiaveOrdine());
+			OrdineCarico ordineCarico = repOrdineCarico.findByChiavePrenotazione(prenotazioneDto.getChiavePrenotazione());
+			OrdineScarico ordineScarico = repOrdineScarico.findByChiavePrenotazione(prenotazioneDto.getChiavePrenotazione());
 						
 			if (ordineCarico==null) {
+				chiave_scarico=ordineScarico.getChiave();
 				deposito_id = ordineScarico.getDeposito().getId();
 			}
 			else {
+				chiave_carico=ordineCarico.getChiave();
 				deposito_id = ordineCarico.getDeposito().getId();
 			}
 			
-			codice_prenotazione = prenotazioneService.createPrenotazione(prenotazioneDto).getCodice();
+			chiavePrenotazione=prenotazioneDto.getChiavePrenotazione();
 			
-			return "redirect:/home_corriere/effettua_prenotazione/effettua_prenotazione1";
+			model.addAttribute("chiaveScarico", chiave_scarico);
+			model.addAttribute("chiaveCarico", chiave_carico);
+			model.addAttribute("chiavePrenotazione", chiavePrenotazione);
+			model.addAttribute("depositoId", deposito_id);
+			
+			Ordine ord = repOrdineCarico.findByChiavePrenotazione(chiavePrenotazione);
+			
+			
+			
+			Optional<Deposito> dep = repositoryDeposito.findById(ord.getDeposito().getId());
+			
+			TipoArea t = TipoArea.LAVORO;
+			
+			List<Area> aree = areaRepository.findByDepositoTipo(dep.get().getId(), t);
+			
+			Deposito deposito = dep.get();
+			
+			List<OrarioDisponibile> orari = deposito.getOrariDisponibili();
+			
+			List<OrarioDisponibile> to_remove = new ArrayList<>();
+			
+			List<Prenotazione> prenotazioniCarico;
+			List<Prenotazione> prenotazioniScarico;
+			
+			OrdineScarico ordineS;
+			OrdineCarico ordineC;
+			String data;
+			
+			ViewPrenotazioni v;
+			
+			if(chiave_carico==0l) {
+				OrdineScarico o= repOrdineScarico.findByChiavePrenotazione(prenotazioneDto.getChiavePrenotazione());
+				
+				data = o.getDataPrevista();
+				v = new ViewPrenotazioni(data, o.getDeposito().getIndirizzo(), 
+						o.getNumero(), o.getNumeroColli(), o.getNumeroColonne(), 
+						o.getNumeroPedane(), o.getPesoTotale());
+				
+			}
+			else {
+				OrdineCarico o= repOrdineCarico.findByChiavePrenotazione(prenotazioneDto.getChiavePrenotazione());
+				
+				data = o.getDataMercePronta();
+				v = new ViewPrenotazioni(data, o.getDeposito().getIndirizzo(), 
+						o.getNumero(), o.getNumeroColli(), o.getNumeroColonne(), 
+						o.getNumeroPedane(), o.getPesoTotale());
+			}
+			
+			model.addAttribute("ordine", v);
+			
+			for(OrarioDisponibile orario : orari) {
+				
+				prenotazioniCarico=prenotazioneRepository.findByIdDepositoCaricoFasciaOraria(deposito.getId(), orario.getFasciaOraria(), data);
+				prenotazioniScarico=prenotazioneRepository.findByIdDepositoScaricoFasciaOraria(deposito.getId(), orario.getFasciaOraria(), data);
+				
+				System.out.print(prenotazioniScarico.size());
+				System.out.print(prenotazioniCarico.size());
+				System.out.print(aree.size());
+	 
+				
+				if((prenotazioniCarico.size()+prenotazioniScarico.size())>=aree.size()) {
+					to_remove.add(orario);
+				}
+			}
+			
+			
+			
+			orari.removeAll(to_remove);
+			
+			
+			model.addAttribute("listOrari", orari);		
+			
+		    
+			List<String> tipi = new ArrayList<>();
+			
+			tipi.add("Carta d'identita'");
+			tipi.add("Patente");
+			
+			model.addAttribute("listTipi", tipi);
+			
+			return "inserisci_dati";
 		}
 		else return "redirect:/login";
 	}
 	
-	@GetMapping("/effettua_prenotazione/effettua_prenotazione1")
-	public String showOrari(Model model) {
+	@GetMapping("/effettua_prenotazione/inserisci_dati")
+	public String showOrariModel (Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("CORRIERE"))) {
+		if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("CORRIERE"))) { 
+		    
+			System.out.print("provaaa1");
+		    
 		
-			Optional<Deposito> dep = repositoryDeposito.findById(deposito_id);
+			return "inserisci_dati";
 			
-		    Collection<OrarioDisponibile> orari = dep.get().getOrariDisponibili();
-		    
-		    model.addAttribute("listorari",orari);	  
-		    
-		    return "effettua_prenotazione1";
 		}
 		else return "redirect:/login"; 
 	}
 	
-	@GetMapping("/visualizza_prenotazioni/{fasciaOraria}")
-	public String showPrenotazioni(Model model, @PathVariable (value = "fasciaOraria") String fasciaOraria) {
+	@PostMapping("/effettua_prenotazione/inserisci_dati")
+	public String AddOrari(Model model, CorrierePrenotazioneDto prenotazioneDto) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("CORRIERE"))) {
+		
+			System.out.print("provaaa");
+			
+			if(prenotazioneService.telefono_error_exists(prenotazioneDto.getTelefono())) {
+				return "redirect:/home_corriere/effettua_prenotazione/inserisci_orario/inserisci_dati?error0";
+			}
+			else if(prenotazioneService.email_error_exists(prenotazioneDto.getEmail())) {
+				return "redirect:/home_corriere/effettua_prenotazione/inserisci_orario/inserisci_dati?error1";
+			}
+		
+			prenotazioneDto.setChiavePrenotazione(prenotazioneDto.getChiavePrenotazione());
+			
+			prenotazioneDto.setOrario(prenotazioneDto.getOrario());
+			
+			prenotazioneService.createPrenotazione(prenotazioneDto);
+			
+			return "redirect:/home_corriere/visualizza_prenotazioni";
+			
+		}
+		else return "redirect:/login"; 
+	}
+	
+	@GetMapping("/visualizza_prenotazioni")
+	public String showPrenotazioni(Model model) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("CORRIERE"))) {
 			
-			Optional<Prenotazione> prenotazione=prenotazioneRepository.findById(codice_prenotazione);
-			
-			prenotazione.get().setFasciaOraria(fasciaOraria);
-			
-			prenotazioneRepository.save(prenotazione.get());
-			
-			/*Optional<Deposito> dep = repositoryDeposito.findById(deposito_id);
-			
-		    Collection<OrarioDisponibile> orari = dep.get().getOrariDisponibili();
-		    
-		    orari.remove(new OrarioDisponibile(fasciaOraria));
-		    
-		    dep.get().setOrariDisponibili(orari);
-		    
-		    RepositoryOrariDeposito repOraDep = new RepositoryOrariDeposito();
-		    
-		    repOraDep.do_query(deposito_id, fasciaOraria);*/
-			
 		    Collection<Prenotazione> prenotazioni = prenotazioneRepository.findAll();
-		    Collection<Prenotazione> prenotazioni_corriere = new ArrayList<>();
+		    
+			String indirizzo;
+		    
+		    List<ViewPrenotazioni> view = new ArrayList<>();
 		    
 		    for(Prenotazione p : prenotazioni) {
+		    	
+		    	if(p.getOrdineCarico()==null) {
+					indirizzo = p.getOrdineScarico().getDeposito().getIndirizzo();
+				}
+				else {
+					indirizzo = p.getOrdineCarico().getDeposito().getIndirizzo();
+				}
+		    	
 		    	if(repUtente.findByEmail(auth.getName()).getId().equals(p.getCorriere().getId())) {
-		    		prenotazioni_corriere.add(p);
+		    		view.add(new ViewPrenotazioni(p.getData(), p.getFasciaOraria(), indirizzo));
 		    	}
 		    }
 		    
-		    model.addAttribute("listPrenotazioni",prenotazioni_corriere);
+		    System.out.print(view.get(0).getIndirizzo());
+		    
+		    model.addAttribute("list",view);
 		    
 		    return "visualizza_prenotazioni";
 		}
 		else return "redirect:/login"; 
+	}
+	
+	@GetMapping("/gestione-ordini")
+	public String showGestioneOrdini(Model model) {
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("CORRIERE"))) {
+			
+			Utente u=userService.loadUserByMail(auth.getName());
+			
+			ArrayList<ViewOrdine> ordiniView = new ArrayList<>();
+			
+			List<Prenotazione> prenotazioniCorriere = prenotazioneService.getPrenotazioniFromIdcorriere(u.getId());
+			
+			for(Prenotazione p : prenotazioniCorriere) {
+				if(p.getOrdineCarico()!=null) {
+					
+					ordiniView.add(new ViewOrdine("CARICO",p.getOrdineCarico().getNumero(),p.getOrdineCarico().getDataPrevista(),p.getOrdineCarico().getNumeroColli(),p.getOrdineCarico().getNumeroColonne(),p.getOrdineCarico().getNumeroPedane(),p.getOrdineCarico().getPesoTotale(),p.getOrdineCarico().getDeposito().getIndirizzo(),p.getTargaCorriere(),p.getNomeCorriere() + " " + p.getCognomeCorriere()));
+				}
+				else {
+					ordiniView.add(new ViewOrdine("SCARICO",p.getOrdineScarico().getNumero(),p.getOrdineScarico().getDataPrevista(),p.getOrdineScarico().getNumeroColli(),p.getOrdineScarico().getNumeroColonne(),p.getOrdineScarico().getNumeroPedane(),p.getOrdineScarico().getPesoTotale(),p.getOrdineScarico().getDeposito().getIndirizzo(),p.getTargaCorriere(),p.getNomeCorriere() + " " + p.getCognomeCorriere()));
+				}
+			}
+			
+			model.addAttribute("listOrdiniView", ordiniView);
+			
+			return "gestione-ordini-corriere";	
+		}
+		else return "redirect:/login";
+		
+		
 	}
 	
 }
