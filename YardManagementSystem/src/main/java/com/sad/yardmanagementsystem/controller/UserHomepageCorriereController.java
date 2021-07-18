@@ -1,11 +1,15 @@
 package com.sad.yardmanagementsystem.controller;
 
-import java.util.ArrayList;     
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;    
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -14,12 +18,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.sad.yardmanagementsystem.model.Area;
 import com.sad.yardmanagementsystem.model.DepositiCorrieri;
 import com.sad.yardmanagementsystem.model.Deposito;
 import com.sad.yardmanagementsystem.model.OrarioDisponibile;
+import com.sad.yardmanagementsystem.model.Ordine;
 import com.sad.yardmanagementsystem.model.OrdineCarico;
 import com.sad.yardmanagementsystem.model.OrdineScarico;
 import com.sad.yardmanagementsystem.model.Prenotazione;
@@ -34,6 +41,7 @@ import com.sad.yardmanagementsystem.repository.RepositoryPrenotazione;
 import com.sad.yardmanagementsystem.repository.RepositoryUtente;
 import com.sad.yardmanagementsystem.service.EmailService;
 import com.sad.yardmanagementsystem.service.PrenotazioneService;
+import com.sad.yardmanagementsystem.service.QRCodeService;
 import com.sad.yardmanagementsystem.service.UtenteService;
 
 import com.sad.yardmanagementsystem.controller.dto.CorrierePrenotazioneDto;
@@ -184,7 +192,7 @@ public class UserHomepageCorriereController {
 			
 			OrdineCarico ordineCarico = repOrdineCarico.findByChiavePrenotazione(prenotazioneDto.getChiavePrenotazione());
 			OrdineScarico ordineScarico = repOrdineScarico.findByChiavePrenotazione(prenotazioneDto.getChiavePrenotazione());
-			
+						
 			if (ordineCarico==null) {
 				chiave_scarico=ordineScarico.getChiave();
 				deposito_id = ordineScarico.getDeposito().getId();
@@ -195,17 +203,31 @@ public class UserHomepageCorriereController {
 			}
 			
 			chiavePrenotazione=prenotazioneDto.getChiavePrenotazione();
-
+			
+			model.addAttribute("chiaveScarico", chiave_scarico);
+			model.addAttribute("chiaveCarico", chiave_carico);
 			model.addAttribute("chiavePrenotazione", chiavePrenotazione);
+			model.addAttribute("depositoId", deposito_id);
+			
+						
+			
+			Optional<Deposito> dep = repositoryDeposito.findById(deposito_id);
 			
 			TipoArea t = TipoArea.LAVORO;
 			
 			List<Area> aree = areaRepository.findByDepositoTipo(deposito_id, t);
 			
-			List<OrarioDisponibile> orari = repositoryDeposito.getById(deposito_id).getOrariDisponibili();
+			Deposito deposito = dep.get();
+			
+			List<OrarioDisponibile> orari = deposito.getOrariDisponibili();
 			
 			List<OrarioDisponibile> to_remove = new ArrayList<>();
-
+			
+			List<Prenotazione> prenotazioniCarico;
+			List<Prenotazione> prenotazioniScarico;
+			
+			OrdineScarico ordineS;
+			OrdineCarico ordineC;
 			String data;
 			
 			ViewPrenotazioni v;
@@ -230,22 +252,28 @@ public class UserHomepageCorriereController {
 			
 			model.addAttribute("ordine", v);
 			
-			List<Prenotazione> prenotazioniCarico;
-			List<Prenotazione> prenotazioniScarico;
-			
 			for(OrarioDisponibile orario : orari) {
 				
 				prenotazioniCarico=prenotazioneRepository.findByIdDepositoCaricoFasciaOraria(deposito_id, orario.getFasciaOraria(), data);
 				prenotazioniScarico=prenotazioneRepository.findByIdDepositoScaricoFasciaOraria(deposito_id, orario.getFasciaOraria(), data);
+				
+				System.out.print(prenotazioniScarico.size());
+				System.out.print(prenotazioniCarico.size());
+				System.out.print(aree.size());
+	 
 				
 				if((prenotazioniCarico.size()+prenotazioniScarico.size())>=aree.size()) {
 					to_remove.add(orario);
 				}
 			}
 			
+			
+			
 			orari.removeAll(to_remove);
 			
+			
 			model.addAttribute("listOrari", orari);		
+			
 		    
 			List<String> tipi = new ArrayList<>();
 			
@@ -259,32 +287,13 @@ public class UserHomepageCorriereController {
 		else return "redirect:/login";
 	}
 	
-	@GetMapping("/effettua_prenotazione/inserisci_dati")
-	public String showOrariModel (Model model) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("CORRIERE"))) { 
-		    
-			System.out.print("provaaa1");
-		    
-		
-			return "inserisci_dati";
-			
-		}
-		else return "redirect:/login"; 
-	}
-	
 	@PostMapping("/effettua_prenotazione/inserisci_dati")
-	public String AddOrari(Model model, CorrierePrenotazioneDto prenotazioneDto) {
+	public String insertDati(Model model, CorrierePrenotazioneDto prenotazioneDto) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("CORRIERE"))) {
-		
-			System.out.print("provaaa");
-			
-			if(prenotazioneService.telefono_error_exists(prenotazioneDto.getTelefono())) {
-				return "redirect:/home_corriere/effettua_prenotazione/inserisci_orario/inserisci_dati?error0";
-			}
-			else if(prenotazioneService.email_error_exists(prenotazioneDto.getEmail())) {
-				return "redirect:/home_corriere/effettua_prenotazione/inserisci_orario/inserisci_dati?error1";
+					
+			if (prenotazioneService.prenotazione_already_exists(prenotazioneDto)) {
+				return "redirect:/home_corriere?alreadyBooked";
 			}
 		
 			prenotazioneDto.setChiavePrenotazione(prenotazioneDto.getChiavePrenotazione());
@@ -293,45 +302,21 @@ public class UserHomepageCorriereController {
 			
 			prenotazioneService.createPrenotazione(prenotazioneDto);
 			
-			return "redirect:/home_corriere/visualizza_prenotazioni";
+			return "redirect:/home_corriere/visualizza_prenotazioni/"+prenotazioneDto.getChiavePrenotazione();
 			
 		}
 		else return "redirect:/login"; 
 	}
 	
-	@GetMapping("/visualizza_prenotazioni")
-	public String showPrenotazioni(Model model) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("CORRIERE"))) {
-			
-		    Collection<Prenotazione> prenotazioni = prenotazioneRepository.findAll();
-		    
-			String indirizzo;
-		    
-		    List<ViewPrenotazioni> view = new ArrayList<>();
-		    
-		    for(Prenotazione p : prenotazioni) {
-		    	
-		    	if(p.getOrdineCarico()==null) {
-					indirizzo = p.getOrdineScarico().getDeposito().getIndirizzo();
-				}
-				else {
-					indirizzo = p.getOrdineCarico().getDeposito().getIndirizzo();
-				}
-		    	
-		    	if(repUtente.findByEmail(auth.getName()).getId().equals(p.getCorriere().getId())) {
-		    		view.add(new ViewPrenotazioni(p.getData(), p.getFasciaOraria(), indirizzo));
-		    	}
-		    }
-		    
-		    System.out.print(view.get(0).getIndirizzo());
-		    
-		    model.addAttribute("list",view);
-		    
-		    return "visualizza_prenotazioni";
-		}
-		else return "redirect:/login"; 
-	}
+	@GetMapping(value = "/visualizza_prenotazioni/{qrcode}",produces = MediaType.IMAGE_PNG_VALUE)
+	public ResponseEntity<BufferedImage> qrgenQRCode(@PathVariable String qrcode) throws Exception {
+        return okResponse(QRCodeService.generateQRCodeImage(qrcode));
+    }
+
+    private ResponseEntity<BufferedImage> okResponse(BufferedImage image) {
+        return new ResponseEntity<>(image, HttpStatus.OK);
+    }
+    
 	
 	@GetMapping("/gestione-ordini")
 	public String showGestioneOrdini(Model model) {
@@ -362,6 +347,8 @@ public class UserHomepageCorriereController {
 		else return "redirect:/login";
 		
 		
+		
 	}
+	
 	
 }

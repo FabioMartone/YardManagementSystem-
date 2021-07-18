@@ -1,5 +1,7 @@
 package com.sad.yardmanagementsystem.service;
 
+import org.springframework.stereotype.Service;
+
 import com.sad.yardmanagementsystem.controller.dto.DepositoOrarioDto;
 import com.sad.yardmanagementsystem.model.Deposito;
 import com.sad.yardmanagementsystem.model.Utente;

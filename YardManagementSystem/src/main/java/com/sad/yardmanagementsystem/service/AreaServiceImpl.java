@@ -16,4 +16,8 @@ public class AreaServiceImpl implements AreaService {
 		
 		areaRepository.save(a);
 	}
+	
+	public Area updateArea(Area a) {
+		return areaRepository.save(a);
+	}
 }

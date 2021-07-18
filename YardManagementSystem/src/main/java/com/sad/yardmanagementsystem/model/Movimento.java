@@ -22,36 +22,47 @@ public class Movimento {
 	@GeneratedValue(strategy =  GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "ora_inizio")
-	private int oraInizio;
+	@Column(name = "inizio_movimento")
+	private String inizioMovimento;
 	
-	@Column(name = "ora_fine")
-	private int oraFine;
-	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_deposito", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private Deposito deposito;
+	@Column(name = "fine_movimento")
+	private String fineMovimento;
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_area", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Area area;
+	
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_prenotazione", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Prenotazione prenotazione;
 
 	public Movimento() {
 		// TODO Auto-generated constructor stub
 		super();
 	}
 	
-	public Movimento(Long id, int oraInizio, int oraFine, Deposito deposito, Area area) {
+	public Movimento(String Inizio, String Fine,  Area area, Prenotazione prenotazione) {
 		super();
-		this.id = id;
-		this.oraInizio = oraInizio;
-		this.oraFine = oraFine;
-		this.deposito = deposito;
+		this.inizioMovimento =Inizio;
+		this.fineMovimento = Fine;
 		this.area=area;
+		this.prenotazione = prenotazione;
 	}
 	
+	public Prenotazione getPrenotazione() {
+		return prenotazione;
+	}
+
+	public void setPrenotazione(Prenotazione prenotazione) {
+		this.prenotazione = prenotazione;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -60,36 +71,30 @@ public class Movimento {
 		this.id = id;
 	}
 	
-	public int getOraInizio() {
-		return oraInizio;
-	}
 	
-	public void setOraInizio(int oraInizio) {
-		this.oraInizio = oraInizio;
-	}
 	
-	public int getOraFine() {
-		return oraFine;
+	public String getInizioMovimento() {
+		return inizioMovimento;
 	}
-	
-	public void setOraFine(int oraFine) {
-		this.oraFine = oraFine;
+
+	public void setInizioMovimento(String inizioMovimento) {
+		this.inizioMovimento = inizioMovimento;
 	}
-	
-	public Deposito getDeposito() {
-		return deposito;
+
+	public String getFineMovimento() {
+		return fineMovimento;
 	}
-	
-	public void setDeposito(Deposito deposito) {
-		this.deposito = deposito;
+
+	public void setFineMovimento(String fineMovimento) {
+		this.fineMovimento = fineMovimento;
 	}
-	
+
 	public Area getArea() {
 		return area;
 	}
 	
 	public void setArea(Area area) {
 		this.area = area;
-	}
+	}	
 
 }

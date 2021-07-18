@@ -5,6 +5,7 @@ import java.util.List;
 import com.sad.yardmanagementsystem.controller.dto.CorrierePrenotazioneDto; 
 import com.sad.yardmanagementsystem.model.Prenotazione;
 
+
 public interface PrenotazioneService {
 
 	Prenotazione createPrenotazione(CorrierePrenotazioneDto prenotazioneDto);

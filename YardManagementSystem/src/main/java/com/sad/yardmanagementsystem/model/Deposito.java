@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -47,7 +48,7 @@ public class Deposito {
 	
 	@OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
-            mappedBy = "codice")
+            mappedBy = "deposito")
 	private List<Area> aree;
 	
 	@OneToMany(cascade = CascadeType.ALL,
@@ -55,14 +56,15 @@ public class Deposito {
             mappedBy = "id")
 	private List<DepositiCorrieri> corrieri;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(
-			name = "orari_deposito",
-			joinColumns = @JoinColumn(
-		            name = "id_deposito", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(
-				            name = "fascia_oraria", referencedColumnName = "fascia_oraria"))
-	private List<OrarioDisponibile> orariDisponibili;
+	@ManyToMany(fetch = FetchType.LAZY,
+			cascade = {
+			CascadeType.PERSIST,
+			CascadeType.MERGE
+			})
+			@JoinTable(name = "orari_deposito",
+			joinColumns = { @JoinColumn(name = "id_deposito") },
+			inverseJoinColumns = { @JoinColumn(name = "fascia") })
+			private List<OrarioDisponibile> orariDisponibili;
 	
 	public Deposito() {
 		super();
@@ -75,6 +77,7 @@ public class Deposito {
 		this.aree = aree;
 	}
 
+	
 	public Long getId() {
 		return id;
 	}

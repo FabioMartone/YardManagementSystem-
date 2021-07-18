@@ -282,7 +282,33 @@ public class UserHomepageGestoreController {
 			
 			model.addAttribute("indirizzo", depositoDto.getIndirizzo());
 			
-			return "add_area";
+			return "success";
+			
+		}else return "redirect:/login";
+	}
+	
+	@PostMapping("/add_deposito/add_area/success")
+	public String Success(@ModelAttribute("Deposito") DepositoDto depositoDto, Model model) {
+
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null && auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("GESTORE"))) {
+			
+			model.addAttribute("indirizzo", depositoDto.getIndirizzo());
+			
+			TipoArea t = TipoArea.LAVORO;
+			
+			if(depositoDto.getTipo().equals("LAVORO")) {
+				t=TipoArea.LAVORO;
+			}
+			else if(depositoDto.getTipo().equals("SOSTA")){
+				t=TipoArea.SOSTA;
+			}
+			
+			aree.add(new AreaDto(depositoDto.getDescrizione(), 0, t));
+			
+			model.addAttribute("indirizzo", depositoDto.getIndirizzo());
+			
+			return "success";
 			
 		}else return "redirect:/login";
 	}

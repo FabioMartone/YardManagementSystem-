@@ -1,8 +1,11 @@
 package com.sad.yardmanagementsystem.config;
 
+import java.awt.image.BufferedImage;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -12,7 +15,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
+import org.springframework.http.converter.BufferedImageHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
 import com.sad.yardmanagementsystem.service.UtenteService;
 
 
@@ -42,6 +46,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	    return new MySimpleUrlAuthenticationSuccessHandler();
 	}
 	
+	@Bean
+    public HttpMessageConverter<BufferedImage> createImageHttpMessageConverter() {
+        return new BufferedImageHttpMessageConverter();
+    }
+	
 	@Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authenticationProvider());
@@ -53,7 +62,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				 "/registration**",
 	                "/js/**",
 	                "/css/**",
-	                "/img/**").permitAll()
+	                "/img/**",
+	                "/api/**").permitAll()
 		.anyRequest().authenticated()
 		.and()
 		.formLogin()
@@ -67,6 +77,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 		.logoutSuccessUrl("/login?logout")
 		.permitAll();
+		
+		http.csrf().disable();
 	}
+	
+	@Bean("authenticationManager")
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+            return super.authenticationManagerBean();
+    }
 
 }

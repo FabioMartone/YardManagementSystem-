@@ -12,32 +12,35 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 </head>
+<body th:background="@{/images/mattonella2.png}">
+	<!DOCTYPE html>
+<html>
+<head>
+<title>GESTIONE ORDINI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+</head>
 <body>
+
 	<!-- create navigation bar ( header) -->
-	<nav class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container">
-			<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed"
-					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
-					aria-controls="navbar">
-					<span class="sr-only">Toggle navigation</span> <span
-						class="icon-bar"></span> <span class="icon-bar"></span> <span
-						class="icon-bar"></span>
-				</button>
-				<a class="navbar-brand" href="#" th:href="@{/home_gestore}">YardManagementSystem - Homepage Gestore - Gestione Ordini</a>
-			</div>
-			<div id="navbar" class="collapse navbar-collapse">
-				<ul class="nav navbar-nav">
-					<li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></li>
-				</ul>
-			</div>
-		</div>
-	</nav>	
-<br>
-<br>
-	<div class="container">
-		<h1>Benvenuto <span sec:authentication="principal.username"></span></h1></h1>
+	<div class="w3-top">
+  		<div class="w3-bar w3-black w3-card">
+    		<a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="@{/}" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+		    <sec:authorize="isAuthenticated()"><a th:href="@{/home_gestore}" class="w3-bar-item w3-button w3-padding-large">HOME</a>
+		    <sec:authorize="isAuthenticated()"><a th:href="@{/logout}" class="w3-bar-item w3-button w3-padding-large">LOGOUT</a>
+  		</div>
 	</div>
+	
+<br>
+<br>
+<br>
+
 	<div class="container">
 			<!-- logout message -->
 					<div th:if="${param.successCarico}">
@@ -69,9 +72,9 @@
       <input type="text" class="form-control" th:field = "*{numero}" id="numeroOrdine" placeholder="Numero ordine" value="" required>
     </div>
     <div class="col-md-4 mb-3">
-      <label for="dataPrevista">Data Prevista</label>
-      <input type="text" class="form-control" th:field = "*{dataPrevista}" id="dataPrevista" placeholder="Data prevista" value="" required>
-    </div><!-- mettere datepicker !-->
+  		<label for="dataPrevista">Data prevista:</label>
+  		<input type="date" class="form-control" id="dataPrevista" name="dataPrevista" th:field = "*{dataPrevista}">
+  	</div>
     <div class="col-md-4 mb-3">
       <label for="numeroColli">Numero Colli</label>
       <input type="number" class="form-control" th:field = "*{numeroColli}" id="numeroColli" placeholder="Numero colli" value="0" required>
@@ -91,9 +94,9 @@
   </div>
   <div class="form-row">
   	<div class="col-md-4 mb-3">
-      <label for="dataMercePronta">Data Merce Pronta</label>
-      <input type="text" class="form-control" th:field = "*{dataMercePronta}" id="dataMercePronta" placeholder="Data merce pronta" value="" required>
-    </div>
+  		<label for="dataMercePronta">Data merce pronta:</label>
+  		<input type="date" class="form-control" id="dataMercePronta" name="dataMercePronta" th:field = "*{dataMercePronta}">
+  	</div>
  	<div class="col-md-4 mb-3">
       <label for="clienteDestinatario">Cliente Destinatario</label>
       <input type="text" class="form-control" th:field = "*{clienteDestinatario}" id="clienteDestinatario" placeholder="Cliente destinatario" value="" required>
@@ -107,8 +110,7 @@
 	<select  id="deposito" name="deposito" th:field="*{deposito}" >
 	<option th:each="dep : ${listDeposito}" th:value="${dep.id}" th:utext="${dep.indirizzo}"/></select>
 </div>
-<di
-v class="col-md-4 mb-3">
+<div class="col-md-4 mb-3">
  <button class="btn btn-primary" type="submit">Inserisci Carico</button>
  </div>
 </div>
@@ -122,9 +124,9 @@ v class="col-md-4 mb-3">
       <input type="text" class="form-control" th:field = "*{numero}" id="numeroOrdine" placeholder="Numero ordine" value="" required>
     </div>
     <div class="col-md-4 mb-3">
-      <label for="dataPrevista">Data Prevista</label>
-      <input type="text" class="form-control" th:field = "*{dataPrevista}" id="dataPrevista" placeholder="Data prevista" value="" required>
-    </div><!-- mettere datepicker !-->
+  		<label for="dataPrevista">Data prevista:</label>
+  		<input type="date" class="form-control" id="dataPrevista" name="dataPrevista" th:field = "*{dataPrevista}">
+  	</div>
     <div class="col-md-4 mb-3">
       <label for="numeroColli">Numero Colli</label>
       <input type="number" class="form-control" th:field = "*{numeroColli}" id="numeroColli" placeholder="Numero colli" value="0" required>

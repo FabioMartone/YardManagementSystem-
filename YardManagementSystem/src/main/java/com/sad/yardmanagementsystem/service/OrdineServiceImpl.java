@@ -39,4 +39,15 @@ public class OrdineServiceImpl implements OrdineService {
 			OrdineScarico ordineScarico = new OrdineScarico(ordineScaricoDto.getNumero() ,ordineScaricoDto.getDataPrevista(), ordineScaricoDto.getNumeroColli(), ordineScaricoDto.getNumeroColonne(), ordineScaricoDto.getNumeroPedane(), ordineScaricoDto.getPesoTotale(),chiave, repositoryDeposito.findById(ordineScaricoDto.getDeposito()).get() ,f , null );
 			ordineScaricoRepository.save(ordineScarico);
 		}
+	
+	public OrdineScarico getOrdineScaricoByChiavePren(String chiave) {
+		
+		return ordineScaricoRepository.findByChiavePrenotazione(chiave);
+	}
+	
+	public OrdineCarico getOrdineCaricoByChiavePren(String chiave) {
+		
+		return ordineCaricoRepository.findByChiavePrenotazione(chiave);
+
+	}
 }

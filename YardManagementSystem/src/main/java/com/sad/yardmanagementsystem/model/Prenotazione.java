@@ -34,13 +34,9 @@ public class Prenotazione {
 	@Column(name = "fascia_oraria")
 	private String fasciaOraria;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(
-			name = "movimenti_prenotazione",
-			joinColumns = @JoinColumn(
-		            name = "codice_prenotazione", referencedColumnName = "codice"),
-			inverseJoinColumns = @JoinColumn(
-				            name = "id_movimento", referencedColumnName = "id"))
+	@OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "prenotazione")
 	private List<Movimento> movimenti;
 	
 	@OneToOne
