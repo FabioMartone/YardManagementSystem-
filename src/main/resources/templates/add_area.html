@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AGGIUNGI AREA</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+</head>
+<body th:background="@{/images/mattonella2.png}">
+
+	<!-- create navigation bar ( header) -->
+	<div class="w3-top">
+  		<div class="w3-bar w3-black w3-card">
+    		<a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="@{/}" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+		    <sec:authorize="isAuthenticated()"><a th:href="@{/home_gestore}" class="w3-bar-item w3-button w3-padding-large">HOME</a>
+		    <sec:authorize="isAuthenticated()"><a th:href="@{/logout}" class="w3-bar-item w3-button w3-padding-large">LOGOUT</a>
+  		</div>
+	</div>
+	
+	
+<br>
+<br>
+    <!-- Create HTML registration form -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3">
+
+ 
+
+                <!-- success message -->
+                <div th:if="${param.success}">
+                    <div class="alert alert-info">Hai aggiunto correttamente una nuova area!</div>
+                </div>
+           
+                <h1>Inserisci i dati dell'area </h1>
+                <form th:action="@{/home_gestore/add_deposito/add_area}" method="post" th:object="${Deposito}">
+                    <div class="form-group">
+                        <label class="control-label" for="descrizione"> Descrizione Area </label>
+                        <input id="descrizione" class="form-control" type="text" th:field="*{descrizione}"
+                            required autofocus="autofocus" />
+                    </div>
+                    <div class="form-group col-md-8">
+						<label  class="col-form-label">Tipo </label>
+						<select  id="tipo" name="tipo" th:field="*{tipo}" >
+						<option th:value="LAVORO" th:utext="LAVORO"/>
+						<option th:value="SOSTA" th:utext="SOSTA"/>
+						</select>	
+					<input name = "indirizzo" type="hidden" class="form-control" th:value= "${indirizzo}" id="indirizzo" required>
+					</div>
+					
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success" >Aggiungi area</button>
+                    </div>
+                </form>
+                
+                <form th:action="@{/home_gestore/add_deposito/add_area/inserisci_deposito}" method="post" th:object="${Deposito}">		
+                    <div class="form-group">
+                    	<input name = "indirizzo" type="hidden" class="form-control" th:value= "${indirizzo}" id="indirizzo" required>
+                        <button type="submit" class="btn btn-success" >Fine</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

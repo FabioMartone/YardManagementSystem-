@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="ISO-8859-1">
+<title>YardManagementSystem - Homepage Gestore - Gestisci Ordini</title>
+
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<!-- create navigation bar ( header) -->
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#" th:href="@{/home_gestore}">YardManagementSystem - Homepage Gestore - Gestione Ordini</a>
+			</div>
+			<div id="navbar" class="collapse navbar-collapse">
+				<ul class="nav navbar-nav">
+					<li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>	
+<br>
+<br>
+	<div class="container">
+		<h1>Benvenuto <span sec:authentication="principal.username"></span></h1></h1>
+	</div>
+	<div class="container">
+			<!-- logout message -->
+
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+			</div>
+		</div>
+	<div class="container my-2">
+	<h1>Lista Ordini Prenotati</h1>
+	<table border="1" class = "table table-striped table-responsive-md">
+			<thead>
+				<tr>
+					<th>
+							Tipologia Ordine
+					</th>
+					<th>
+							Numero Ordine
+					</th>
+					<th> 	Data prevista 
+					</th>
+					<th> 	Numero colli
+					</th>
+					<th> 	Numero colonne 
+					</th>
+					<th> 	Numero pedane 
+					</th>
+					<th> 	Peso totale 
+					</th>
+					<th> 	Deposito
+					</th>
+					<th> 	Targa
+					</th>
+					<th> 	Autista
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="ordView : ${listOrdiniView}">
+					<td th:text="${ordView.tipologiaOrdine}">
+					<td th:text="${ordView.numeroOrdine}">
+					<td th:text="${ordView.dataPrevista}">
+					<td th:text="${ordView.numeroColli}">
+					<td th:text="${ordView.numeroColonne}">
+					<td th:text="${ordView.numeroPedane}">
+					<td th:text="${ordView.pesoTotale}">
+					<td th:text="${ordView.deposito}">
+					<td th:text="${ordView.targa}">
+					<td th:text="${ordView.autista}">
+				</tr>
+			</tbody>
+		</table>
+		</div>
+</body>
+</html>
