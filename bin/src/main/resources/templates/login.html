@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>LOGIN</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+</head>
+<body>
+
+	<!-- create navigation bar ( header) -->
+	<div class="w3-top">
+  		<div class="w3-bar w3-black w3-card">
+    		<a title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+		   		<h4>YARD MANAGEMENT SYSTEM</h4>
+  		</div>
+	</div>
+	
+	
+	<br>
+	<br>
+	<div class = "container">
+		<div class = "row">
+			<div class = "col-md-6 col-md-offset-3">
+				
+				<h1> Login Utente </h1>
+				<form th:action="@{/login}" method="post">
+					
+					<!-- error message -->
+					<div th:if="${param.error}">
+						<div class="alert alert-danger">Username o password non corretti</div>
+					</div>
+				
+					<!-- logout message -->
+					<div th:if="${param.logout}">
+						<div class="alert alert-info">Hai effettuato il logout.</div>
+					</div>
+					
+					<!-- successfull registration message -->
+					<div th:if="${param.success0}">
+						<div class="alert alert-info">Registrazione effettuata correttamente.</div>
+					</div>
+					
+					<div class = "form-group">
+						<label for ="username"> Username </label> :
+						<input type="text" class = "form-control" id ="username" name = "username"
+						placeholder="Inserisci Email" autofocus="autofocus">
+					</div>
+					
+					<div class="form-group">
+						<label for="password">Password</label>: <input type="password"
+							id="password" name="password" class="form-control"
+							placeholder="Inserisci Password" />
+					</div>
+					
+					<div class="form-group">
+						<div class="row">
+							<div class="col-sm-6 col-sm-offset-3">
+								<input type="submit" name="login-submit" id="login-submit"
+									class="form-control btn btn-primary" value="Log In" />
+							</div>
+						</div>
+					</div>
+				</form>
+				<div class="form-group">
+						<span>Sei un nuovo utente? <a href="/" th:href="@{/registration}">Registrati qui!</a></span>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

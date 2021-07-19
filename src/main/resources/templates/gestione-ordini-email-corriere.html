@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>INVIO EMAIL</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+</head>
+<body th:background="@{/images/mattonella2.png}">
+
+	<!-- create navigation bar ( header) -->
+	<div class="w3-top">
+  		<div class="w3-bar w3-black w3-card">
+    		<a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="@{/}" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+		    <sec:authorize="isAuthenticated()"><a th:href="@{/home_gestore}" class="w3-bar-item w3-button w3-padding-large">HOME</a>
+		    <sec:authorize="isAuthenticated()"><a th:href="@{/logout}" class="w3-bar-item w3-button w3-padding-large">LOGOUT</a>
+  		</div>
+	</div>
+	
+	
+ <br>
+ <br>
+ <div class="container">
+		<h1><span sec:authentication="principal.username"></span></h1></h1>
+	</div>
+	<div class="container">
+			<!-- logout message -->
+					<div th:if="${param.successCarico}">
+						<div class="alert alert-info">Ordine di carico inserito correttamente! Il corriere ha ricevuto l'email con il codice di prenotazione.</div>
+					</div>
+					<div th:if="${param.successScarico}">
+						<div class="alert alert-info">Ordine di scarico inserito correttamente! Il fornitore ha ricevuto l'email con il codice di prenotazione.</div>
+					</div>
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+			</div>
+		</div>
+		<div class="container my-2">     
+		<form th:action = "@{/home_gestore/gestione-ordini/gestione-ordini-email-corriere}" method = "post" th:object="${corriereMail}">     
+		<div class="col-md-4 mb-3">  
+		<label  class="col-form-label">Corriere</label>
+		<select  id="corriere" name="corriere" th:field="*{corriere}">
+		<option th:each="cor : ${listCorrieri}" th:value="${cor.id}" th:utext="${cor.ragioneSociale}"/>
+		</select>     
+		<input name = "chiave_prenotazione" type="hidden" class="form-control" th:value= "${chiave_prenotazione}" id="chiave_prenotazione" required>        
+ 		<button class="btn btn-primary" type="submit">Invia E-Mail al Corriere</button>
+		</div>
+		
+ </form> 
+ </div>
+</body>
+</html>

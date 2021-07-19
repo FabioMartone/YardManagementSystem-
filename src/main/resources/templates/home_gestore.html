@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HOME GESTORE</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+</head>
+<body>
+
+	<!-- create navigation bar ( header) -->
+	<div class="w3-top">
+  		<div class="w3-bar w3-black w3-card">
+    		<a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="@{/}" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+		    <sec:authorize="isAuthenticated()"><a th:href="@{/home_gestore}" class="w3-bar-item w3-button w3-padding-large">HOME</a>
+		    <div class="w3-dropdown-hover w3-hide-small">
+      			<button class="w3-padding-large w3-button" title="More">DEPOSITI <i class="fa fa-caret-down"></i></button>     
+      			<div class="w3-dropdown-content w3-bar-block w3-card-4">
+       				<sec:authorize="isAuthenticated()"><a th:href="@{/home_gestore/add_orario}" class="w3-bar-item w3-button">NUOVO ORARIO DISPONIBILE</a>
+        			<sec:authorize="isAuthenticated()"><a th:href="@{/home_gestore/add_deposito}" class="w3-bar-item w3-button">NUOVO DEPOSITO</a>
+        			<sec:authorize="isAuthenticated()"><a th:href="@{/home_gestore/visualizza_depositi}" class="w3-bar-item w3-button">VISUALIZZA DEPOSITI</a>
+      			</div>
+    		</div>
+		    <sec:authorize="isAuthenticated()"><a th:href="@{/home_gestore/gestione-associazioni}" class="w3-bar-item w3-button w3-padding-large w3-hide-small">ASSOCIAZIONI CON I CORRIERI</a>
+		    <sec:authorize="isAuthenticated()"><a th:href="@{/home_gestore/gestione-ordini}" class="w3-bar-item w3-button w3-padding-large w3-hide-small">NUOVO ORDINE</a>
+		    <sec:authorize="isAuthenticated()"><a th:href="@{/home_gestore/visualizza_ordini}" class="w3-bar-item w3-button w3-padding-large">VISUALIZZA ORDINI</a>
+		    <sec:authorize="isAuthenticated()"><a th:href="@{/logout}" class="w3-bar-item w3-button w3-padding-large">LOGOUT</a>
+  		</div>
+	</div>
+
+	<br>
+	<br>
+
+	<img style="width:100%; height:100%" th:src="@{images/immagineprincipale_con_scritta.jpg}"/>
+	
+	
+
+</body>
+</html>

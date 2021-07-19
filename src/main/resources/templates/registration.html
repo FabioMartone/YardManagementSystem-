@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>REGISTRAZIONE</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+</head>
+<body>
+
+	<!-- create navigation bar ( header) -->
+	<div class="w3-top">
+  		<div class="w3-bar w3-black w3-card">
+    		<a title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+		   		<h4>YARD MANAGEMENT SYSTEM</h4>
+  		</div>
+	</div>
+	
+
+<br>
+<br>
+	<!-- Create HTML registration form -->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+
+				<!-- success message -->
+				<div th:if="${param.success}">
+					<div class="alert alert-info">Ti sei registrato correttamente al nostro software!</div>
+				</div>
+				
+				<!-- error message -->
+				<div th:if="${param.error0}">
+					<div class="alert alert-danger">La password deve contenere almeno una lettera minuscola, una lettera maiuscola, un numero e un simbolo.</div>
+				</div>
+				
+				<!-- error message -->
+				<div th:if="${param.error1}">
+					<div class="alert alert-danger">La mail inserita e' in un formato sbagliato.</div>
+				</div>
+				
+				<!-- error message -->
+				<div th:if="${param.error2}">
+					<div class="alert alert-danger">Il numero di telefono deve contenere solo cifre.</div>
+				</div>
+				
+				<!-- error message -->
+				<div th:if="${param.error3}">
+					<div class="alert alert-danger">L'email inserita Ã¨ giÃ  in uso.</div>
+				</div>
+
+				<h1>Registrazione</h1>
+
+				<form th:action="@{/registration}" method="post" th:object="${utente}">
+					<div class="form-group">
+						<label class="control-label" for="RagioneSociale"> Ragione Sociale </label>
+						<input id="RagioneSociale" class="form-control" type="text" th:field="*{ragioneSociale}"
+							required autofocus="autofocus" />
+					</div>
+
+					<div class="form-group">
+						<label class="control-label" for="partitaIVA"> partita IVA </label> <input
+							id="partitaIVA" class="form-control" type="text" th:field="*{partitaIVA}"
+							required autofocus="autofocus" />
+					</div>
+
+					<div class="form-group">
+						<label class="control-label" for="Indirizzo"> Indirizzo </label> <input
+							id="indirizzo" class="form-control" type="text" th:field="*{indirizzo}" required
+							autofocus="autofocus" />
+					</div>
+
+					<div class="form-group">
+						<label class="control-label" for="Referente"> Referente </label> <input
+							id="referente" class="form-control" type="text"
+							th:field="*{referente}" required autofocus="autofocus" />
+					</div>
+					
+					<div class="form-group">
+						<label class="control-label" for="email"> email </label> <input
+							id="mail" class="form-control" type="text"
+							th:field="*{mail}" required autofocus="autofocus" />
+					</div>
+					
+					<div class="form-group">
+						<label class="control-label" for="Telefono"> Telefono </label> <input
+							id="telefono" class="form-control" type="text"
+							th:field="*{telefono}" required autofocus="autofocus" />
+					</div>
+					
+					<div class="form-group">
+						<label class="control-label" for="Password"> Password </label> <input
+							id="password" class="form-control" type="password"
+							th:field="*{Password}" required autofocus="autofocus" />
+					</div>
+					
+					<div class="form-group col-md-8">
+						<label  class="col-form-label">Tipo </label>
+						<select id="tipologia" name="tipologia" th:field="*{tipologia}" >
+						<option th:value="GESTORE" th:utext="GESTORE"/>
+						<option th:value="CORRIERE" th:utext="CORRIERE"/>
+						</select>
+					</div>
+
+					<div class="form-group">
+						<button type="submit" class="btn btn-success">Registrati</button>
+						<span>Registrato? <a href="/" th:href="@{/login}">Effettua il Login</a></span>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

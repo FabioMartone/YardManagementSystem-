@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>VISUALIZZA PRENOTAZIONI</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+	integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+	crossorigin="anonymous">
+</head>
+<body th:background="@{/images/mattonella2.png}">
+
+	<!-- create navigation bar ( header) -->
+	<div class="w3-top">
+  		<div class="w3-bar w3-black w3-card">
+    		<a class="w3-bar-item w3-button w3-padding-large w3-hide-medium w3-hide-large w3-right" href="@{/}" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+		    <sec:authorize="isAuthenticated()"><a th:href="@{/home_corriere}" class="w3-bar-item w3-button w3-padding-large">HOME</a>
+		    <sec:authorize="isAuthenticated()"><a th:href="@{/logout}" class="w3-bar-item w3-button w3-padding-large">LOGOUT</a>
+  		</div>
+	</div>
+ 
+
+<br>
+<br>
+    <!-- Create HTML registration form -->
+    <div class="container">
+        <div class="row">
+         
+                <!-- success message -->
+                <div th:if="${param.success}">
+                    <div class="alert alert-info">Prenotazione effettuata!</div>
+                </div>
+
+				<h1>Le tue prenotazioni</h1>
+				<table border="1" class = "table table-striped table-responsive-md">
+						<thead>
+							<tr class="w3-red">
+								<th>
+										Data</a>
+								</th>
+								<th>
+										Fascia Oraria</a>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="view : ${list}">
+							<td th:text="${view.data}">
+							<td th:text="${view.fasciaOraria}">
+							<td th:text="${view.indirizzo}">
+							</tr>
+						</tbody>
+					</table>
+					</div>
+					<div class="container my-2">
+</body>
+</html>
